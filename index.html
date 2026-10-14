@@ -249,7 +249,7 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .pill{background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:999px;box-shadow:0 3px 0 var(--ink);padding:5px 14px;font-family:var(--f-num);font-weight:600;font-size:14px;letter-spacing:.03em;display:inline-flex;align-items:center;gap:7px}
 .fabs{position:sticky;top:calc(14px + env(safe-area-inset-top,0px));height:0;z-index:20}
 .fabcol{position:absolute;right:-72px;top:0;display:flex;flex-direction:column;gap:10px}
-.fab{width:58px;border:2px solid var(--ink);background:#fff;color:#1B1B1B;border-radius:16px;box-shadow:0 4px 0 var(--ink);padding:7px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-num);font-size:9.5px;letter-spacing:0;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.fab{width:62px;border:2px solid var(--ink);background:#fff;color:#1B1B1B;border-radius:16px;box-shadow:0 4px 0 var(--ink);padding:7px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-num);font-size:9.5px;letter-spacing:0;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 .fab svg{width:22px;height:22px}
 .fab.pri{background:var(--brand)}
 .fab:active,.nbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
@@ -294,6 +294,13 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .tcardx .sw{height:64px;border-radius:9px;display:block}
 .tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.crit.greet i{animation:wave .5s ease-in-out infinite!important}
+.crit.greet .w{animation-duration:.14s}
+.critters.up{z-index:6}
+.heart{position:absolute;pointer-events:none;animation:heartup 2.2s ease-out forwards}
+@keyframes wave{0%,100%{transform:rotate(-10deg) translateY(0)}50%{transform:rotate(10deg) translateY(-7px)}}
+@keyframes heartup{0%{opacity:0;transform:translateY(8px) scale(.4)}20%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-34px) scale(1)}}
+
 .chip2.skip{background:rgba(255,255,255,.88);color:#6a6a6a}
 .chip2.skip b{font-weight:500}
 .gc.skip .m{color:#9a9a9a;font-weight:500}
@@ -770,17 +777,45 @@ const CRIT={
  sunrise:[{cls:'fly',w:56,d:[14,22],svg:()=>CR.bird('#FFB000')},{cls:'fly',w:44,d:[18,28],svg:()=>CR.bfly('#F2704F')},{cls:'hop',w:62,d:[20,30],svg:()=>CR.rabbit('#F2A25C')}],
  lagoon:[{cls:'swim',w:60,d:[14,22],svg:()=>CR.fish('#FF9E4A')},{cls:'swim',w:52,d:[16,26],svg:()=>CR.fish('#7B6BE8')},{cls:'swim',w:44,d:[22,32],svg:CR.jelly},{cls:'swim',w:72,d:[26,36],svg:CR.turtle}]
 };
+function mkCritter(L,k,rtl,top,dur){
+  const el=document.createElement('div');el.className='crit '+k.cls+(rtl?' rtl':'');
+  el.style.top=top.toFixed(0)+'px';el.style.width=k.w+'px';el.style.setProperty('--dur',dur.toFixed(1)+'s');
+  el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';el._rtl=rtl;
+  el.addEventListener('animationend',e=>{if(e.target===el)el.remove()});L.appendChild(el);return el;
+}
 function spawnCritter(){
   if(reduced()||document.hidden||S.step!=='plan')return;
   const L=$('.critters');if(!L||L.children.length>=4)return;
-  const sc=$('.scene');const th=(sc&&sc.dataset.theme)||'meadow';
-  const k=pickOne(CRIT[th]||CRIT.meadow);
-  const el=document.createElement('div');el.className='crit '+k.cls+(Math.random()<.5?' rtl':'');
-  const r=sc.getBoundingClientRect();const vt=Math.max(0,-r.top),vb=Math.min(r.height,innerHeight-r.top);if(vb-vt<120)return;el.style.top=(vt+60+Math.random()*Math.max(10,vb-vt-140)).toFixed(0)+'px';el.style.width=k.w+'px';
-  el.style.setProperty('--dur',((k.d[0]+Math.random()*(k.d[1]-k.d[0]))/1.7).toFixed(1)+'s');
-  el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';
-  el.addEventListener('animationend',e=>{if(e.target===el)el.remove()});L.appendChild(el);
+  const sc=$('.scene');const th=(sc&&sc.dataset.theme)||'meadow';const list=CRIT[th]||CRIT.meadow;
+  const r=sc.getBoundingClientRect();const vt=Math.max(0,-r.top),vb=Math.min(r.height,innerHeight-r.top);if(vb-vt<120)return;
+  const top=vt+60+Math.random()*Math.max(10,vb-vt-140);
+  const k=pickOne(list),rtl=Math.random()<.5;
+  const dur=(k.d[0]+Math.random()*(k.d[1]-k.d[0]))/1.7;
+  mkCritter(L,k,rtl,top,dur);
+  if(Math.random()<.6&&L.children.length<4){
+    const k2=pickOne(list);
+    mkCritter(L,k2,!rtl,top+(Math.random()*40-10),dur);
+  }
 }
+const HEART='<svg viewBox="0 0 24 22" width="24" height="22"><path d="M12 21C5 15 1 11.500 1 7a5.500 5.500 0 0 1 11-1.500A5.500 5.500 0 0 1 23 7c0 4.500-4 8-11 14z" fill="#FF4D79" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></svg>';
+function greet(a,b){
+  a._met=b._met=true;
+  [a,b].forEach(e=>{e.style.animationPlayState='paused';e.classList.add('greet')});
+  const L=$('.critters');if(!L)return;L.classList.add('up');const lr=L.getBoundingClientRect(),ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+  const h=document.createElement('div');h.className='heart';h.setAttribute('aria-hidden','true');
+  h.style.left=(((ra.left+ra.right+rb.left+rb.right)/4)-lr.left-12).toFixed(0)+'px';
+  h.style.top=(Math.min(ra.top,rb.top)-lr.top-10).toFixed(0)+'px';h.innerHTML=HEART;L.appendChild(h);
+  setTimeout(()=>{[a,b].forEach(e=>{e.style.animationPlayState='';e.classList.remove('greet')});h.remove();if(!document.querySelector('.crit.greet'))L.classList.remove('up')},2200);
+}
+setInterval(()=>{
+  const cs=[...document.querySelectorAll('.critters .crit')].filter(e=>!e._met);
+  for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){
+    const a=cs[i],b=cs[j];if(a._rtl===b._rtl)continue;
+    const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+    const dx=Math.abs((ra.left+ra.right)/2-(rb.left+rb.right)/2),dy=Math.abs((ra.top+ra.bottom)/2-(rb.top+rb.bottom)/2);
+    if(dx<(ra.width+rb.width)/2+8&&dy<56){greet(a,b);return}
+  }
+},120);
 (function loop(){spawnCritter();setTimeout(loop,1200+Math.random()*2200)})();
 FABICON.wheel=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>`;
 FABICON.gift=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19v-3.5h-19zM12 5.5V20M12 5.5C10 2 6 2.5 7 5c.4 1 3 .5 5 .5zM12 5.5c2-3.500 6-3 5-.5-.4 1-3 .5-5 .5z"/></svg>`;
