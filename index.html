@@ -1,0 +1,477 @@
+<title>What's Eat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one white rounded card on a light-grey ground. Onboarding is a centred column; the weekly plan is a wide day-by-meal grid. */
+:root{
+  --brand:#F1AB1A;
+  --brand-deep:#D98F00;
+  --brand-tint:#FEF7E8;
+  --brand-line:#F9E8C6;
+  --ground:#EDEDED;
+  --card:#FFFFFF;
+  --field:#F4F4F4;
+  --ink:#1F1F1F;
+  --muted:#8A8A8A;
+  --line:#E6E6E6;
+  --green:#07B670;
+  --tomato:#D94120;
+  --f-logo:'Fredoka','Baloo 2','Nunito',system-ui,sans-serif;
+  --f-head:'Lora','Georgia',serif;
+  --f-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:auto}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.card{background:var(--card);border-radius:20px;max-width:1180px;margin:0 auto;padding:28px 36px 40px;min-height:560px;position:relative}
+.logo{font-family:var(--f-logo);font-weight:700;color:var(--brand);font-size:24px;letter-spacing:.01em;line-height:1;display:inline-flex;align-items:flex-start;gap:3px;user-select:none}
+.logo .l2{position:relative;top:.52em}
+.logo svg{margin-top:.55em;width:9px;height:12px}
+.center{max-width:470px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:6px}
+.art{display:block;margin:0 auto 14px}
+h1{font-family:var(--f-head);font-weight:600;font-size:21px;line-height:1.25;margin:0 0 8px;text-wrap:balance}
+.sub{color:#6a6a6a;font-size:13px;margin:0 0 22px;max-width:420px;text-wrap:balance}
+.field{width:100%;text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+.inp{width:100%;height:40px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0 12px;font-size:13px}
+.inp::placeholder{color:#b3b3b3}
+.inp.bad{border-color:var(--tomato)}
+.err{color:var(--tomato);font-size:12px;margin:-6px 0 10px;text-align:left;width:100%;min-height:0}
+.btn{border:0;border-radius:8px;height:40px;padding:0 18px;font-weight:600;font-size:13px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn:hover{border-color:#cfcfcf}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.pri:hover{background:var(--brand-deep);border-color:var(--brand-deep)}
+.btn.pri[disabled]{opacity:.45;cursor:not-allowed}
+.btn.full{width:100%}
+.btn.pill{border-radius:999px;height:34px;padding:0 22px;font-size:12.5px}
+.or{display:flex;align-items:center;gap:12px;width:100%;color:#b0b0b0;font-size:11px;margin:16px 0}
+.or:before,.or:after{content:"";height:1px;background:var(--line);flex:1}
+.btn.google{height:38px;font-weight:500;font-size:12.5px}
+.back{position:absolute;left:36px;top:78px;border:1px solid var(--line);background:#fff;border-radius:999px;height:26px;padding:0 12px 0 8px;font-size:11.5px;display:inline-flex;align-items:center;gap:4px;color:#444}
+.actions{display:flex;justify-content:space-between;width:100%;margin-top:34px}
+/* meal-time picker */
+.times{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:760px;margin-top:6px;text-align:left}
+.tcard{background:#F7F7F7;border:1.5px solid transparent;border-radius:12px;padding:16px 16px;display:flex;align-items:center;gap:12px;position:relative;min-height:84px}
+.tcard.on{border-color:var(--brand);background:var(--brand-tint)}
+.tcard .meta{flex:1;min-width:0}
+.tcard .nm{font-size:13px;font-weight:600;margin-bottom:8px;display:block}
+.tcard input.nmi{border:0;border-bottom:1px dashed #cfcfcf;background:transparent;font-weight:600;font-size:13px;width:100%;padding:0 0 2px;margin-bottom:8px}
+.chk{width:18px;height:18px;border-radius:50%;border:1.5px solid #c9c9c9;background:#fff;flex:none;display:grid;place-items:center;padding:0;align-self:flex-start;margin-top:2px}
+.tcard.on .chk{background:var(--brand);border-color:var(--brand)}
+.tcard.on .chk:after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.rng{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.rng input{height:28px;border:1px solid var(--line);border-radius:6px;padding:0 6px;font-size:12px;background:#fff;width:96px}
+.tart{flex:none;width:44px;height:44px}
+.addc{margin:22px 0 0;align-self:flex-start;border:0;background:none;font-size:12.5px;color:#444;display:inline-flex;gap:8px;align-items:center;padding:4px 0}
+.addc b{font-size:16px;line-height:1;font-weight:500}
+/* foods */
+.wide{max-width:700px}
+.mealrow{display:flex;gap:12px;width:100%;align-items:flex-end;position:relative;text-align:left}
+.mealrow .grow{flex:1;min-width:0}
+.mealrow label{font-size:11.5px;font-weight:600;display:block;margin-bottom:6px}
+.mealrow .inp{background:var(--field);border-color:transparent;height:38px}
+.typebtn{height:38px;border:0;background:transparent;font-size:12px;color:#444;display:inline-flex;align-items:center;gap:6px;padding:0 4px;white-space:nowrap}
+.typebtn .dots{display:inline-flex;gap:3px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.menu{position:absolute;right:0;top:100%;margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;width:190px;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.menu button{display:flex;width:100%;justify-content:space-between;align-items:center;border:0;background:none;padding:8px 10px;border-radius:6px;font-size:12px;text-align:left}
+.menu button:hover{background:#f6f6f6}
+.menu button.sel{font-weight:600}
+.menu .dot{width:9px;height:9px}
+.menu .dot.ring{background:transparent!important;border:1.5px solid currentColor}
+.added{width:100%;text-align:left;margin-top:22px}
+.added h3{font-size:12px;margin:0 0 8px;display:flex;align-items:center;gap:8px;font-weight:600}
+.badge{background:var(--brand);color:#fff;border-radius:999px;font-size:10px;min-width:18px;height:18px;display:inline-grid;place-items:center;padding:0 5px}
+.chips{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;min-height:64px;align-content:flex-start}
+.chip{background:#F2F2F2;border-radius:999px;padding:5px 8px 5px 10px;display:inline-flex;align-items:center;gap:6px;font-size:11.5px}
+.chip .x{border:0;background:none;color:#888;font-size:13px;line-height:1;padding:0 2px}
+.chip .x:hover{color:var(--tomato)}
+.empty{color:#a8a8a8;font-size:12px;align-self:center;padding:4px 2px}
+.linkb{border:0;background:none;color:var(--brand-deep);font-weight:600;font-size:12px;padding:0}
+.legend{position:absolute;right:-170px;top:0}
+/* plan */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:relative}
+.tools .btn{height:34px;font-size:12px;padding:0 14px;border-radius:7px}
+.icb{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;padding:0}
+.me{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:3px 12px 3px 3px;background:#fff;font-size:12px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-weight:600;font-size:11px;display:grid;place-items:center}
+.pm{position:absolute;right:0;top:100%;margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;min-width:180px;z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.pm button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:6px;font-size:12.5px}
+.pm button:hover{background:#f6f6f6}
+.scroller{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.grid{display:grid;min-width:680px}
+.gh{padding:14px 18px;border-bottom:1px solid var(--line);border-left:1px solid var(--line);background:#FBFBFB;display:flex;gap:10px;align-items:center;min-height:62px}
+.gh:first-child{border-left:0}
+.gh svg{width:26px;height:26px;flex:none}
+.gh .n{font-weight:700;font-size:13px;line-height:1.2}
+.gh .t{font-size:11px;color:var(--muted)}
+.gd{padding:0 18px;display:flex;gap:16px;align-items:center;font-size:11.5px;color:#777;letter-spacing:.04em;border-bottom:1px solid var(--line);min-height:62px}
+.gd b{font-weight:500}
+.gd span.num{color:#777}
+.gc{border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 18px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;background:transparent;text-align:right;border-top:0;border-right:0;border-radius:0;width:100%}
+.gc:hover{background:#FAFAFA}
+.gc .m{font-size:12px;font-weight:600}
+.gc .meta{display:flex;align-items:center;gap:10px;font-size:10px;color:#8a8a8a}
+.gc .meta span{display:inline-flex;align-items:center;gap:3px}
+.gc .tag{border:1px solid var(--brand);background:var(--brand-line);color:#A56B00;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:500}
+.gc .add{color:#b0b0b0;font-weight:500}
+.today .gd,.today .gc{background:var(--brand-tint)}
+.today .gd{color:var(--brand-deep)}
+.today .gc:hover{background:#FDF0D2}
+.last{border-bottom:0!important}
+.note{margin:14px 2px 0;font-size:11.5px;color:var(--muted)}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(20,20,20,.38);display:grid;place-items:center;z-index:50;padding:16px}
+.dlg{background:#fff;border-radius:16px;width:100%;max-width:440px;padding:24px;max-height:86vh;overflow:auto}
+.dlg h2{font-family:var(--f-head);font-size:19px;margin:0 0 4px;font-weight:600}
+.dlg p{margin:0 0 16px;color:#6a6a6a;font-size:12.5px}
+.dlg .row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;text-align:left}
+.opt:hover{border-color:var(--brand)}
+.opt.cur{border-color:var(--brand);background:var(--brand-tint)}
+.ml h4{margin:16px 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ml label{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f1f1f1;font-size:12.5px;cursor:pointer}
+.ml label small{margin-left:auto;color:var(--muted);font-size:11px}
+.ml input{accent-color:var(--brand);width:16px;height:16px}
+.ml input:checked + span{text-decoration:line-through;color:#aaa}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#222;color:#fff;border-radius:999px;padding:10px 18px;font-size:12.5px;z-index:80}
+@media (max-width:720px){
+  .card{padding:20px 16px 32px;border-radius:16px}
+  .times{grid-template-columns:1fr}
+  .back{position:static;margin:14px 0 0}
+  .legend{display:none}
+  .mealrow{flex-wrap:wrap}
+  .actions{margin-top:26px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .center>*{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+</style>
+
+<div class="card" id="app"></div>
+
+<script>
+/* ---------- illustrations (inline SVG) ---------- */
+const face=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><circle cx="-5.5" cy="0" r="1.9" fill="#3a2418"/><circle cx="5.5" cy="0" r="1.9" fill="#3a2418"/><path d="M-3 3.2q3 3 6 0" stroke="#3a2418" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="-9.5" cy="3.6" r="2.3" fill="#ff7f7f" opacity=".55"/><circle cx="9.5" cy="3.6" r="2.3" fill="#ff7f7f" opacity=".55"/></g>`;
+const ART={
+trio:`<svg viewBox="0 0 120 90" width="104" height="78">
+<path d="M80 14c28 6 34 40 20 58-5 6-13 5-16-1 10-18 4-38-14-46z" fill="#F2C230" stroke="#B67F10" stroke-width="2" stroke-linejoin="round"/>
+<path d="M92 34c4 8 4 18 0 26" stroke="#B67F10" stroke-width="1.4" fill="none" opacity=".6"/>
+<path d="M18 30c-8-12 2-20 14-16 14 4 16 22 8 34-6 9-18 8-22-2-2-5-1-11 0-16z" fill="#E8472A" stroke="#9E2410" stroke-width="2" stroke-linejoin="round"/>
+<path d="M28 15c-2-6 2-9 7-8" stroke="#2F7D32" stroke-width="3" fill="none" stroke-linecap="round"/>${face(27,35,.8)}
+<circle cx="56" cy="58" r="25" fill="#D94120" stroke="#8F2410" stroke-width="2"/>
+<path d="M56 34l-5 7-9-2 6 6-3 8 8-3 4 5 3-7 9 1-6-6 4-7-8 3z" fill="#3E9A3C" stroke="#1F6B22" stroke-width="1.6" stroke-linejoin="round"/>
+<ellipse cx="45" cy="52" rx="4" ry="2.6" fill="#fff" opacity=".35" transform="rotate(-30 45 52)"/>${face(56,64,1.1)}</svg>`,
+toast:`<svg viewBox="0 0 120 90" width="104" height="78">
+<path d="M10 56L44 22l30 34z" fill="#FBC93D" stroke="#B88512" stroke-width="2" stroke-linejoin="round"/>
+<path d="M44 22l12-4 30 38-12 0z" fill="#E9A91F" stroke="#B88512" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="40" cy="42" r="3.4" fill="#E9A91F"/><circle cx="52" cy="50" r="2.6" fill="#E9A91F"/><circle cx="30" cy="50" r="2.2" fill="#E9A91F"/>
+<path d="M70 28c-6-8 4-14 12-12 6-6 20-4 22 6 8 2 8 12 2 16v30c0 5-4 8-9 8H79c-5 0-9-3-9-8V44c-4-4-4-12 0-16z" fill="#E5A25B" stroke="#8C5420" stroke-width="2" stroke-linejoin="round"/>
+<path d="M78 34h20c4 0 6 3 6 6v28c0 3-2 5-5 5H80c-3 0-5-2-5-5V40c0-3 2-6 3-6z" fill="#F8DDA9"/>${face(90,56,1)}
+<path d="M18 74c-6-10 6-18 16-14 8-4 20 2 18 12-2 10-14 14-22 12-6 2-10-2-12-10z" fill="#fff" stroke="#C9C3B5" stroke-width="1.6"/>
+<circle cx="34" cy="70" r="8" fill="#FFB81C"/><ellipse cx="31" cy="67" rx="2.5" ry="1.6" fill="#fff" opacity=".6"/></svg>`,
+avocado:`<svg viewBox="0 0 120 100" width="112" height="94">
+<g transform="rotate(-10 40 60)"><path d="M40 14c14 0 24 18 24 38 0 20-10 34-24 34S16 72 16 52c0-20 10-38 24-38z" fill="#2F7D32" stroke="#105219" stroke-width="2"/>
+<path d="M40 22c10 0 18 14 18 30 0 17-8 28-18 28S22 69 22 52c0-16 8-30 18-30z" fill="#D4E681"/><circle cx="40" cy="62" r="11" fill="#814E26"/><ellipse cx="36" cy="58" rx="3" ry="2" fill="#fff" opacity=".3"/></g>
+<g transform="rotate(10 82 60)"><path d="M82 14c14 0 24 18 24 38 0 20-10 34-24 34S58 72 58 52c0-20 10-38 24-38z" fill="#2F7D32" stroke="#105219" stroke-width="2"/>
+<path d="M82 22c10 0 18 14 18 30 0 17-8 28-18 28S64 69 64 52c0-16 8-30 18-30z" fill="#D4E681"/><circle cx="82" cy="62" r="11" fill="#814E26"/></g>
+${face(42,70,.9)}${face(80,70,.9)}
+<path d="M62 18c4-12 16-12 22-8-4 8-12 12-22 8z" fill="#105219"/></svg>`,
+coffee:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="48" rx="22" ry="6" fill="#E9E9E9"/><path d="M10 26h34v10c0 8-7 13-17 13S10 44 10 36z" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><path d="M44 29h4c4 0 5 7 0 8h-4" stroke="#9a9a9a" stroke-width="2" fill="none"/><ellipse cx="27" cy="26" rx="17" ry="4.6" fill="#5A3417" stroke="#9a9a9a" stroke-width="2"/><path d="M20 18c-3-4 3-6 0-10M30 18c-3-4 3-6 0-10" stroke="#bbb" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+salad:`<svg viewBox="0 0 60 60"><path d="M6 30h48c0 14-10 24-24 24S6 44 6 30z" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><circle cx="18" cy="26" r="9" fill="#58B947"/><circle cx="31" cy="22" r="10" fill="#3E9A3C"/><circle cx="43" cy="27" r="8" fill="#6BC653"/><circle cx="24" cy="20" r="4.5" fill="#E8472A"/><circle cx="38" cy="18" r="3.8" fill="#E8472A"/><circle cx="31" cy="29" r="3" fill="#F6D04D"/></svg>`,
+pasta:`<svg viewBox="0 0 60 60"><circle cx="30" cy="32" r="25" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><circle cx="30" cy="32" r="17" fill="#F4E2C0"/><path d="M16 30c4-9 12-9 14 0s10 9 14 0M18 38c4-6 10-6 12 0s8 6 12 0" stroke="#E0502E" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="30" cy="30" r="5" fill="#C93A1F"/><path d="M34 22c3-5 8-4 9-1-3 4-6 5-9 1z" fill="#3E9A3C"/></svg>`,
+cookie:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#DCA45E" stroke="#8C5420" stroke-width="2"/><g fill="#4a2a12"><circle cx="22" cy="22" r="3.2"/><circle cx="37" cy="20" r="2.6"/><circle cx="40" cy="34" r="3.2"/><circle cx="26" cy="38" r="3"/><circle cx="17" cy="33" r="2.2"/><circle cx="32" cy="29" r="2.2"/></g></svg>`,
+flame:`<svg viewBox="0 0 14 16" width="11" height="12"><path d="M7 1c1 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 1 1 2 2 2-1-3 0-5 1-7z" fill="#F7931E"/><path d="M7 8c1 1.5 2.5 2 2.5 3.6a2.5 2.5 0 0 1-5 0C4.5 10 6 9.5 7 8z" fill="#FFD36B"/></svg>`,
+repeat:`<svg viewBox="0 0 14 14" width="10" height="10" fill="none" stroke="#8a8a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 6A4.5 4.5 0 0 0 3 4.5M2.5 8A4.5 4.5 0 0 0 11 9.5M3 2v3h3M11 12V9H8"/></svg>`
+};
+const LOGO=`<span class="logo" aria-label="What's Eat"><span class="l1">WHAT</span><svg viewBox="0 0 9 12"><path d="M1 1c4 0 6 3 6 6.5" stroke="#F1AB1A" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg><span class="l2">EAT</span></span>`;
+const G=`<svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.9l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>`;
+
+/* ---------- data ---------- */
+const DEFAULT_TYPES=[
+ {id:'breakfast',label:'Morning',name:'Breakfast',color:'#F5C518',from:'07:00',to:'10:00',on:true,art:'coffee'},
+ {id:'lunch',label:'Afternoon',name:'Lunch',color:'#E5399B',from:'12:00',to:'15:00',on:true,art:'salad'},
+ {id:'supper',label:'Evening',name:'Supper',color:'#4B5BE0',from:'18:00',to:'19:00',on:true,art:'pasta'},
+ {id:'midnight',label:'Midnight',name:'Midnight snack',color:'#0E9F6E',from:'00:00',to:'01:00',on:false,art:'cookie'}];
+const PICK_ORDER=['breakfast','supper','lunch','midnight'];
+const EXTRA_COLORS=['#14B8A6','#8B5CF6','#F97316','#64748B'];
+const PRESETS=[
+ ['Jollof and Chicken',['lunch','supper']],['Yam and Egg Stew',['supper']],['Banku and Tilapia',['lunch']],['Etu',['breakfast']],
+ ['Banku and Okro Stew',['lunch','supper']],['Rice and Chicken Stew',['lunch']],['Waakye',['breakfast','lunch']],['Kenkey',['breakfast']],
+ ['Fufu and Palmnut Soup',['lunch']],['Rice and Egg Stew',['supper']],['Rice and Cabbage Stew',['supper']],['Fried Yam and Chilli Sauce',['lunch']],
+ ['Yam and Garden Egg Stew',['supper']],['Bread and Egg',['breakfast']],['Rice Porridge',['breakfast']],['Banku and Fante Fante',['lunch','supper']],
+ ['Beans and Plantain',['lunch']],['Koko',['breakfast']]];
+const DAYS=['MON','TUE','WED','THUR','FRI','SAT','SUN'];
+const ING=[
+ [/jollof/,[['Long-grain rice','Grains & starch'],['Tomatoes','Vegetables'],['Onions','Vegetables'],['Tomato paste','Pantry'],['Vegetable oil','Pantry'],['Scotch bonnet pepper','Vegetables']]],
+ [/chicken/,[['Chicken pieces','Protein'],['Ginger & garlic','Vegetables']]],
+ [/yam/,[['Yam','Grains & starch']]],
+ [/egg(?! stew)|\begg\b/,[['Eggs','Protein']]],
+ [/garden egg/,[['Garden eggs','Vegetables']]],
+ [/kenkey/,[['Kenkey','Grains & starch']]],
+ [/banku/,[['Banku dough','Grains & starch']]],
+ [/okro/,[['Okro','Vegetables'],['Palm oil','Pantry'],['Smoked fish','Protein']]],
+ [/tilapia/,[['Tilapia','Protein'],['Onions','Vegetables'],['Ginger & garlic','Vegetables']]],
+ [/fante/,[['Fresh fish','Protein'],['Tomatoes','Vegetables'],['Onions','Vegetables'],['Scotch bonnet pepper','Vegetables']]],
+ [/stew/,[['Tomatoes','Vegetables'],['Onions','Vegetables'],['Vegetable oil','Pantry'],['Tomato paste','Pantry']]],
+ [/\brice\b/,[['Long-grain rice','Grains & starch']]],
+ [/porridge/,[['Evaporated milk','Pantry'],['Sugar','Pantry']]],
+ [/bread/,[['Bread loaf','Bakery']]],
+ [/koko/,[['Millet flour','Grains & starch'],['Ginger & cloves','Pantry'],['Sugar','Pantry']]],
+ [/plantain/,[['Ripe plantain','Vegetables']]],
+ [/beans|waakye/,[['Black-eyed beans','Grains & starch'],['Palm oil','Pantry']]],
+ [/waakye/,[['Waakye leaves','Pantry'],['Long-grain rice','Grains & starch']]],
+ [/fufu/,[['Cassava & plantain','Grains & starch']]],
+ [/palm/,[['Palm nut paste','Pantry'],['Goat meat','Protein'],['Smoked fish','Protein']]],
+ [/cabbage/,[['Cabbage','Vegetables']]],
+ [/chilli|shito/,[['Chilli sauce','Pantry']]],
+ [/potato/,[['Sweet potato','Grains & starch']]],
+ [/etu/,[['Cooked maize base','Grains & starch']]]
+];
+const PAIR=[[/fried yam/,'Shito'],[/kenkey/,'Shito'],[/plantain/,'Groundnuts'],[/koko/,'Bofrot']];
+const CAT_ORDER=['Grains & starch','Protein','Vegetables','Pantry','Bakery','Other'];
+
+/* ---------- state ---------- */
+const KEY='whats-eat-v1';
+const clone=o=>JSON.parse(JSON.stringify(o));
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.step)return s}catch(e){}return null}
+let S=load()||{step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let UI={selTypes:[],menu:false,pm:false,err:{}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const typeById=id=>S.types.find(t=>t.id===id);
+const activeTypes=()=>S.types.filter(t=>t.on);
+const uid=()=>Math.random().toString(36).slice(2,9);
+function fmt(t){const [h,m]=t.split(':').map(Number);const ap=h>=12?'PM':'AM';const hh=h%12||12;return hh+(m?':'+String(m).padStart(2,'0'):'')+ap}
+function dname(){const e=(S.user&&S.user.email)||'';const base=e.split('@')[0].replace(/[0-9]+/g,'');const parts=base.split(/[._-]+/).filter(Boolean);if(!parts.length)return 'Guest';return parts.map(p=>p[0].toUpperCase()+p.slice(1)).join(' ')}
+function initials(){const p=dname().split(' ');return ((p[0]||'G')[0]+(p[1]?p[1][0]:(p[0][1]||''))).toUpperCase()}
+function toast(msg){document.querySelectorAll('.toast').forEach(n=>n.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;t.setAttribute('role','status');document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function dots(ids){return ids.map(id=>{const t=typeById(id);return t?`<span class="dot" style="background:${t.color}"></span>`:''}).join('')}
+
+/* ---------- plan logic ---------- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function generate(){
+  const plan={};
+  activeTypes().forEach(t=>{
+    const pool=S.meals.filter(m=>m.types.includes(t.id)).map(m=>m.id);
+    const out=[];let bag=[];
+    if(pool.length){for(let d=0;d<7;d++){
+      if(!bag.length)bag=shuffle(pool);
+      if(bag.length>1&&bag[bag.length-1]===out[d-1]){[bag[0],bag[bag.length-1]]=[bag[bag.length-1],bag[0]]}
+      out.push(bag.pop());
+    }}
+    plan[t.id]=out.length?out:new Array(7).fill(null);
+  });
+  S.plan=plan;save();
+}
+function weekDates(){const n=new Date();const off=(n.getDay()+6)%7;return DAYS.map((_,i)=>{const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-off+i);return d})}
+const mealById=id=>S.meals.find(m=>m.id===id);
+
+/* ---------- views ---------- */
+function vSignup(){return `<div>${LOGO}</div>
+<form class="center" id="signup" novalidate>
+ <div class="art">${ART.trio}</div>
+ <h1>Let's plan your meals for the week</h1>
+ <p class="sub">We'll start by learning what you actually enjoy eating, so your plan feels like you.</p>
+ <div class="field"><label for="em">Email</label><input class="inp ${UI.err.em?'bad':''}" id="em" type="email" placeholder="Enter your email address" autocomplete="email" value="${esc(UI.em||'')}"></div>
+ ${UI.err.em?`<div class="err">${UI.err.em}</div>`:''}
+ <div class="field"><label for="pw">Password</label><input class="inp ${UI.err.pw?'bad':''}" id="pw" type="password" placeholder="Enter your password" autocomplete="new-password"></div>
+ ${UI.err.pw?`<div class="err">${UI.err.pw}</div>`:''}
+ <button class="btn pri full" type="submit" style="margin-top:6px">Get Started</button>
+ <div class="or">or</div>
+ <button class="btn google full" type="button" data-act="google">${G} Sign up with Google</button>
+</form>`}
+
+function tcard(t){
+  const custom=!!t.custom;
+  return `<div class="tcard ${t.on?'on':''}" data-id="${t.id}">
+   <button class="chk" data-act="toggleType" data-id="${t.id}" aria-pressed="${t.on}" aria-label="Use ${esc(t.name)}"></button>
+   <div class="meta">${custom?`<input class="nmi" data-name="${t.id}" value="${esc(t.name)}" aria-label="Meal name" maxlength="24">`:`<span class="nm">${t.label}</span>`}
+    <div class="rng"><input type="time" data-time="from" data-id="${t.id}" value="${t.from}" aria-label="${esc(t.name)} start"><span>to</span><input type="time" data-time="to" data-id="${t.id}" value="${t.to}" aria-label="${esc(t.name)} end"></div></div>
+   <div class="tart">${ART[t.art]}</div></div>`}
+function vTimes(){
+  const base=PICK_ORDER.map(typeById).filter(Boolean);
+  const customs=S.types.filter(t=>t.custom);
+  return `<div>${LOGO}</div>
+  <button class="back" data-act="backTo" data-to="signup">‹ Go back</button>
+  <div class="center" style="max-width:800px">
+   <div class="art">${ART.toast}</div>
+   <h1>When do you usually eat during the day?</h1>
+   <p class="sub">Everyone eats differently — some start late, some snack at night. Choose what fits your routine.</p>
+   <div class="times">${base.concat(customs).map(tcard).join('')}</div>
+   <button class="addc" data-act="addCustom"><b>+</b> Add custom meal time</button>
+   <div class="actions" style="max-width:420px"><button class="btn pill" data-act="backTo" data-to="signup">Cancel</button><button class="btn pri pill" data-act="timesNext" ${activeTypes().length?'':'disabled'}>Next</button></div>
+  </div>`}
+
+function chipsHtml(){
+  if(!S.meals.length)return `<span class="empty">Nothing here yet. Meals you add show up here.</span>`;
+  return S.meals.map(m=>`<span class="chip">${dots(m.types)}${esc(m.name)}<button class="x" data-act="rmFood" data-id="${m.id}" aria-label="Remove ${esc(m.name)}">×</button></span>`).join('');
+}
+function menuHtml(){
+  return `<div class="menu" role="menu">${activeTypes().map(t=>{const sel=UI.selTypes.includes(t.id);return `<button class="${sel?'sel':''}" data-act="pickType" data-id="${t.id}" role="menuitemcheckbox" aria-checked="${sel}">${esc(t.name)}<span class="dot ${sel?'':'ring'}" style="background:${t.color};color:${t.color}"></span></button>`}).join('')}</div>`}
+function typeLabel(){return UI.selTypes.length?`<span class="dots">${dots(UI.selTypes)}</span> ${UI.selTypes.length} selected`:'Select Meal type'}
+function vFoods(){return `<div>${LOGO}</div>
+ <button class="back" data-act="backTo" data-to="times">‹ Go back</button>
+ <div class="center wide">
+  <div class="art">${ART.avocado}</div>
+  <h1>What foods do you eat often (or want to add to your plan)?</h1>
+  <p class="sub">Think of the meals that make your week complete — from your go-to weekday joint to your weekend tofu. Add a few, we'll take it from there.</p>
+  <div class="mealrow">
+   <div class="grow"><label for="mealin">Meal</label><input class="inp" id="mealin" placeholder="eg. Fried yam + gizzard" maxlength="48" autocomplete="off"></div>
+   <div style="position:relative"><button class="typebtn" id="typebtn" data-act="typeMenu" aria-haspopup="menu" aria-expanded="${UI.menu}">${typeLabel()} ▾</button><span id="menuslot">${UI.menu?menuHtml():''}</span></div>
+   <button class="btn pri" data-act="addFood" style="height:38px">Add</button>
+  </div>
+  <div class="added"><h3>Added Meals <span class="badge" id="cnt">${S.meals.length}</span> <span style="flex:1"></span><button class="linkb" data-act="presets">Add popular picks</button></h3><div class="chips" id="chips">${chipsHtml()}</div></div>
+  <div class="actions"><button class="btn pill" data-act="backTo" data-to="times">Cancel</button><button class="btn pri pill" data-act="foodsNext" id="fnext" ${S.meals.length?'':'disabled'}>Next</button></div>
+ </div>`}
+
+function cellHtml(t,d,seen){
+  const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);
+  if(!m)return `<button class="gc ${d===6?'last':''}" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="m add">+ Add a meal</span></button>`;
+  const cnt=S.plan[t.id].filter(x=>x===id).length;
+  const pair=PAIR.find(p=>p[0].test(m.name.toLowerCase()));
+  const tag=pair&&!seen.has(id)?`<span class="tag">Try with ${pair[1]}!</span>`:'';
+  seen.add(id);
+  return `<button class="gc ${d===6?'last':''}" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal"><span class="m">${esc(m.name)}</span><span class="meta">${tag}${cnt>=2?`<span>${ART.flame}</span>`:''}<span>${ART.repeat} ${cnt}x this week</span></span></button>`}
+function vPlan(){
+  const ts=activeTypes();const dates=weekDates();const todayIdx=(new Date().getDay()+6)%7;
+  const cols=`110px repeat(${ts.length},minmax(210px,1fr))`;
+  const seenMap={};ts.forEach(t=>seenMap[t.id]=new Set());
+  let rows='';
+  DAYS.forEach((dn,d)=>{
+    rows+=`<div class="row ${d===todayIdx?'today':''}" style="display:contents"><div class="gd ${d===6?'last':''}"><b>${dn}</b><span class="num">${dates[d].getDate()}</span></div>${ts.map(t=>cellHtml(t,d,seenMap[t.id])).join('')}</div>`;
+  });
+  const heads=ts.map(t=>`<div class="gh"><div style="width:26px;height:26px">${ART[t.art]}</div><div><div class="n">${esc(t.name)}</div><div class="t">${fmt(t.from)} - ${fmt(t.to)}</div></div></div>`).join('');
+  const emptyTypes=ts.filter(t=>!S.meals.some(m=>m.types.includes(t.id)));
+  return `<div class="topbar">${LOGO}<div class="tools">
+   <button class="btn pri" data-act="market"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Generate Market List</button>
+   <button class="btn" data-act="addMealOpen">+ Add Meal</button>
+   <button class="btn" data-act="shuffle"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h3c4 0 4 8 8 8h3M1 12h3c1.5 0 2.4-1 3.2-2.2M15 4h-3c-1.3 0-2.2.7-3 1.6M13 2l2 2-2 2M13 10l2 2-2 2"/></svg>Shuffle</button>
+   <button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
+   <button class="me" data-act="avatarMenu" aria-haspopup="menu"><span class="av">${esc(initials())}</span>${esc(dname())}</button>
+   ${UI.pm?`<div class="pm" role="menu"><button data-act="editTimes">Edit meal times</button><button data-act="editMeals">Edit my meals</button><button data-act="signout">Sign out</button></div>`:''}
+  </div></div>
+  <div class="scroller"><div class="grid" style="grid-template-columns:${cols}"><div class="gh" style="border-left:0"></div>${heads}${rows}</div></div>
+  <p class="note">${emptyTypes.length?`No meals added for ${emptyTypes.map(t=>esc(t.name)).join(', ')} yet. Use Add Meal to fill ${emptyTypes.length>1?'them':'it'}. `:''}Tap any meal to swap it.</p>`}
+
+/* ---------- render ---------- */
+function render(){
+  const app=$('#app');
+  app.innerHTML=S.step==='signup'?vSignup():S.step==='times'?vTimes():S.step==='foods'?vFoods():vPlan();
+  if(S.step==='plan')app.style.maxWidth='1180px';else app.style.maxWidth=S.step==='times'?'1000px':'900px';
+}
+
+/* ---------- modals ---------- */
+function openModal(html){closeModal();const o=document.createElement('div');o.className='overlay';o.id='ov';o.innerHTML=`<div class="dlg" role="dialog" aria-modal="true">${html}</div>`;o.addEventListener('mousedown',e=>{if(e.target===o)closeModal()});document.body.appendChild(o);const f=o.querySelector('input,select,button');f&&f.focus&&f.focus();return o}
+function closeModal(){const o=$('#ov');if(o)o.remove()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();if(UI.menu||UI.pm){UI.menu=false;UI.pm=false;if(S.step==='foods')refreshMenu();else render()}}});
+
+function addMealModal(){
+  const ts=activeTypes();
+  openModal(`<h2>Add a meal</h2><p>It goes into your plan on one of the days.</p>
+  <div class="field"><label for="nm2">Meal</label><input class="inp" id="nm2" maxlength="48" placeholder="eg. Fried yam + gizzard"></div>
+  <div class="field" style="margin-bottom:0"><label>When do you eat it?</label>${ts.map(t=>`<label class="opt" style="cursor:pointer"><span style="display:flex;gap:8px;align-items:center"><span class="dot" style="background:${t.color}"></span>${esc(t.name)}</span><input type="checkbox" class="mt" value="${t.id}" style="accent-color:var(--brand)"></label>`).join('')}</div>
+  <div class="row"><button class="btn" data-act="closeModal">Cancel</button><button class="btn pri" data-act="saveMeal">Add to plan</button></div>`);
+}
+function swapModal(tid,d){
+  const t=typeById(tid);const cur=S.plan[tid][d];
+  const pool=S.meals.filter(m=>m.types.includes(tid));
+  openModal(`<h2>${esc(t.name)} · ${DAYS[d]}</h2><p>Pick what you'd like to eat.</p>
+  ${pool.length?pool.map(m=>`<button class="opt ${m.id===cur?'cur':''}" data-act="setMeal" data-t="${tid}" data-d="${d}" data-m="${m.id}">${esc(m.name)}${m.id===cur?'<small>Current</small>':''}</button>`).join(''):`<p>You haven't added any ${esc(t.name.toLowerCase())} meals yet.</p>`}
+  <div class="row"><button class="btn" data-act="addMealOpen">+ New meal</button><button class="btn pri" data-act="closeModal">Done</button></div>`);
+}
+function marketModal(){
+  const need={};
+  activeTypes().forEach(t=>(S.plan[t.id]||[]).forEach(id=>{
+    const m=mealById(id);if(!m)return;
+    const n=m.name.toLowerCase();const got=new Map();
+    ING.forEach(([re,items])=>{if(re.test(n))items.forEach(([name,cat])=>got.set(name,cat))});
+    if(!got.size)got.set(m.name,'Other');
+    got.forEach((cat,name)=>{const k=cat+'|'+name;need[k]=(need[k]||0)+1});
+  }));
+  const by={};Object.keys(need).forEach(k=>{const [cat,name]=k.split('|');(by[cat]=by[cat]||[]).push([name,need[k]])});
+  const body=CAT_ORDER.filter(c=>by[c]).map(c=>`<h4>${c}</h4>`+by[c].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([n,k])=>`<label><input type="checkbox"><span>${esc(n)}</span><small>${k} ${k===1?'meal':'meals'}</small></label>`).join('')).join('');
+  window.__list=CAT_ORDER.filter(c=>by[c]).map(c=>c+'\n'+by[c].map(([n,k])=>`- ${n} (${k})`).join('\n')).join('\n\n');
+  openModal(`<h2>Market list</h2><p>Everything you need for this week's plan.</p><div class="ml">${body||'<p>Add some meals first.</p>'}</div><div class="row"><button class="btn" data-act="copyList">Copy list</button><button class="btn pri" data-act="closeModal">Done</button></div>`);
+}
+
+/* ---------- actions ---------- */
+function refreshChips(){const c=$('#chips');if(c)c.innerHTML=chipsHtml();const n=$('#cnt');if(n)n.textContent=S.meals.length;const b=$('#fnext');if(b)b.disabled=!S.meals.length}
+function refreshMenu(){const s=$('#menuslot');if(s)s.innerHTML=UI.menu?menuHtml():'';const b=$('#typebtn');if(b){b.innerHTML=typeLabel()+' ▾';b.setAttribute('aria-expanded',UI.menu)}}
+function addFood(){
+  const inp=$('#mealin');const name=(inp.value||'').trim();
+  if(!name){inp.focus();return}
+  if(!UI.selTypes.length){UI.menu=true;refreshMenu();toast('Choose when you eat it');return}
+  const ex=S.meals.find(m=>m.name.toLowerCase()===name.toLowerCase());
+  if(ex){UI.selTypes.forEach(t=>{if(!ex.types.includes(t))ex.types.push(t)})}
+  else S.meals.push({id:uid(),name,types:UI.selTypes.slice()});
+  save();inp.value='';inp.focus();refreshChips();
+}
+const A={
+ google(){S.user={email:'guest'};S.step='times';save();render();toast('Signed in')},
+ backTo(el){S.step=el.dataset.to;save();UI.menu=false;render()},
+ toggleType(el){const t=typeById(el.dataset.id);t.on=!t.on;save();render()},
+ addCustom(){const n=S.types.filter(t=>t.custom).length;S.types.push({id:'c'+uid(),label:'Custom',name:'Snack',color:EXTRA_COLORS[n%4],from:'16:00',to:'17:00',on:true,art:'cookie',custom:true});save();render();const i=document.querySelectorAll('.nmi');const l=i[i.length-1];if(l){l.focus();l.select()}},
+ timesNext(){S.step='foods';UI.selTypes=[];UI.menu=false;save();render()},
+ typeMenu(){UI.menu=!UI.menu;refreshMenu()},
+ pickType(el){const id=el.dataset.id;UI.selTypes=UI.selTypes.includes(id)?UI.selTypes.filter(x=>x!==id):UI.selTypes.concat(id);refreshMenu()},
+ addFood,
+ rmFood(el){S.meals=S.meals.filter(m=>m.id!==el.dataset.id);save();refreshChips()},
+ presets(){const act=activeTypes().map(t=>t.id);PRESETS.forEach(([n,ts])=>{const types=ts.filter(t=>act.includes(t));if(!types.length)types.push(act[0]);if(!S.meals.some(m=>m.name.toLowerCase()===n.toLowerCase()))S.meals.push({id:uid(),name:n,types})});save();refreshChips()},
+ foodsNext(){if(!S.meals.length)return;generate();S.step='plan';save();render()},
+ shuffle(){generate();render();toast('Plan reshuffled')},
+ addMealOpen(){addMealModal()},
+ saveMeal(){const name=($('#nm2').value||'').trim();const ts=[...document.querySelectorAll('.mt:checked')].map(x=>x.value);if(!name){$('#nm2').focus();return}if(!ts.length){toast('Choose at least one meal time');return}
+  const m={id:uid(),name,types:ts};S.meals.push(m);
+  ts.forEach(t=>{const arr=S.plan[t]||(S.plan[t]=new Array(7).fill(null));const empties=arr.map((v,i)=>v?-1:i).filter(i=>i>=0);const d=empties.length?empties[0]:Math.floor(Math.random()*7);arr[d]=m.id});
+  save();closeModal();render();toast(name+' added')},
+ swap(el){swapModal(el.dataset.t,+el.dataset.d)},
+ setMeal(el){S.plan[el.dataset.t][+el.dataset.d]=el.dataset.m;save();closeModal();render()},
+ market(){marketModal()},
+ copyList(){const t=window.__list||'';try{navigator.clipboard.writeText(t).then(()=>toast('List copied'),()=>toast('Select the list to copy'))}catch(e){toast('Select the list to copy')}},
+ closeModal,
+ bell(){toast('No new notifications')},
+ avatarMenu(){UI.pm=!UI.pm;render()},
+ editTimes(){UI.pm=false;S.step='times';save();render()},
+ editMeals(){UI.pm=false;S.step='foods';UI.selTypes=[];save();render()},
+ signout(){UI.pm=false;try{localStorage.removeItem(KEY)}catch(e){}S={step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null};UI={selTypes:[],menu:false,pm:false,err:{}};render()}
+};
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el){let ch=false;if(UI.menu&&!e.target.closest('.menu')){UI.menu=false;ch=true;if(S.step==='foods')refreshMenu()}if(UI.pm&&!e.target.closest('.pm')){UI.pm=false;if(S.step==='plan')render()}return}
+  const fn=A[el.dataset.act];
+  if(el.dataset.act!=='avatarMenu'&&el.dataset.act!=='typeMenu'&&UI.pm&&S.step==='plan'&&!['editTimes','editMeals','signout'].includes(el.dataset.act)){UI.pm=false}
+  fn&&fn(el,e);
+});
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='signup')return;e.preventDefault();
+  const em=$('#em').value.trim(),pw=$('#pw').value;UI.em=em;UI.err={};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))UI.err.em='Enter a valid email address.';
+  if(pw.length<6)UI.err.pw='Use at least 6 characters.';
+  if(UI.err.em||UI.err.pw){render();return}
+  S.user={email:em};S.step='times';save();render();
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.time){const ty=typeById(t.dataset.id);ty[t.dataset.time]=t.value;if(!ty.on){ty.on=true;const c=t.closest('.tcard');c&&c.classList.add('on');}save()}
+  if(t.dataset.name){typeById(t.dataset.name).name=t.value||'Snack';save()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='mealin'){e.preventDefault();addFood()}});
+
+/* validate saved state, then draw */
+(function init(){
+  if(S.step==='plan'&&(!S.plan||!S.meals.length)){S.step=S.meals.length?'plan':'times'}
+  if(S.step==='plan'&&!S.plan)generate();
+  render();
+})();
+</script>
