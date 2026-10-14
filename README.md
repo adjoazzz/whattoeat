@@ -14,6 +14,8 @@ npx serve .
 
 - Sign-up and Google sign-in are placeholders. Nothing is verified on a server yet.
 - Progress is saved in the browser with localStorage.
+- Surprise me picks a random Ghanaian dish, drops it into a random open slot this week, and links to a real recipe.
+- Themes: Plain (original grid), Meadow, Dusk, Sunrise, Lagoon. The map themes have animals that wander past.
 
 ## Next
 

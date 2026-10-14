@@ -290,11 +290,42 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .tcardx .sw{height:64px;border-radius:9px;display:block}
 .tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.chip2 .rlink{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:var(--brand-line);color:#1B1B1B;display:grid;place-items:center;font-size:13px;font-weight:700;text-decoration:none;line-height:1}
+.chip2 .rlink:hover{background:var(--brand)}
+.chip2 .tag.sp{background:#FFE3F3;border-color:#E5399B;color:#B01A74}
+.sur{text-align:center}
+.sur h2{font-size:22px}
+.sbox{border:2px solid #1B1B1B;border-radius:16px;box-shadow:0 4px 0 #1B1B1B;background:var(--brand-tint);padding:16px 12px;margin:6px 0 12px}
+.sbox img{width:72px;height:64px;object-fit:contain;display:block;margin:0 auto 6px}
+.sbox b{display:block;font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:20px;line-height:1.2;min-height:25px}
+.sbox .slot{display:inline-block;margin-top:8px;font-family:var(--f-num);letter-spacing:.04em;font-size:13px;font-weight:600;background:#fff;border:2px solid #1B1B1B;border-radius:10px;padding:1px 10px;box-shadow:0 3px 0 #1B1B1B}
+.sreveal{transition:opacity .3s,transform .3s}
+.sreveal.hide{opacity:0;transform:translateY(6px);pointer-events:none}
+.sur .linkrow{display:flex;justify-content:center;margin-bottom:2px}
+.critters{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.crit{position:absolute;left:0;animation:cross var(--dur,18s) linear forwards}
+.crit i{display:block;width:100%}
+.crit svg{display:block;width:100%;height:auto;overflow:visible}
+.crit.rtl{animation-direction:reverse}
+.crit.rtl svg{transform:scaleX(-1)}
+.crit.fly i{animation:flybob 1.5s ease-in-out infinite}
+.crit.hop i{animation:hop .8s ease-in-out infinite}
+.crit.swim i{animation:swimbob 2.6s ease-in-out infinite}
+.crit .w{transform-box:fill-box;transform-origin:center;animation:flap .28s ease-in-out infinite alternate}
+.crit.swim .w,.crit.hop .w{animation:none}
+@keyframes cross{from{left:-110px}to{left:100%}}
+@keyframes flybob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}}
+@keyframes swimbob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(8px) rotate(2deg)}}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.45)}}
+
 @media (max-width:720px){
   .scene{padding:14px 12px 104px 12px;border-radius:18px}
   .fabs{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));top:auto;height:auto;display:flex;justify-content:center;padding-inline:max(10px,env(safe-area-inset-left,0px)) max(10px,env(safe-area-inset-right,0px))}
-  .fabcol{position:static;flex-direction:row;gap:8px;background:rgba(255,255,255,.94);border:2px solid var(--ink);border-radius:20px;padding:8px;box-shadow:0 4px 0 var(--ink)}
-  .fab{width:54px}
+  .fabcol{position:static;flex-direction:row;gap:5px;background:rgba(255,255,255,.94);border:2px solid var(--ink);border-radius:20px;padding:8px;box-shadow:0 4px 0 var(--ink)}
+  .fab{width:49px;font-size:8.5px;letter-spacing:0}
+  .fab svg{width:20px;height:20px}
   .nbtn{width:64px;height:64px}
   .chip2 .cname img{display:none}
   .stop{min-height:200px}
@@ -427,7 +458,7 @@ function eatenDates(){const m={};Object.keys(S.game.eaten).forEach(k=>{if(S.game
 function eatenCount(){return Object.values(S.game.eaten).filter(Boolean).length}
 function cleanDays(){const act=activeTypes().map(t=>t.id);if(!act.length)return 0;return Object.values(eatenDates()).filter(set=>act.every(id=>set.has(id))).length}
 function streak(){const m=eatenDates();const d=new Date();if(!m[dkey(d)])d.setDate(d.getDate()-1);let n=0;while(m[dkey(d)]){n++;d.setDate(d.getDate()-1)}return n}
-function xpTotal(){return eatenCount()*10+cleanDays()*25+Math.min(S.meals.length,GOAL)*5+(S.plan?20:0)+(S.game.market?5:0)+Object.keys(S.game.chests||{}).length*50}
+function xpTotal(){return eatenCount()*10+cleanDays()*25+Math.min(S.meals.length,GOAL)*5+(S.plan?20:0)+(S.game.market?5:0)+Object.keys(S.game.chests||{}).length*50+Math.min(S.meals.filter(m=>m.surprise).length,10)*5}
 const BADGES=[
  {id:'plan',name:'Plan Maker',desc:'Build your first weekly plan',art:'assets/tomatoes.png',ok:()=>!!S.plan},
  {id:'bite',name:'First Bite',desc:'Tick off your first meal',art:'assets/coffee.png',ok:()=>eatenCount()>=1},
@@ -437,6 +468,7 @@ const BADGES=[
  {id:'menu',name:'Menu Builder',desc:'Add 10 meals to your menu',art:'assets/toast.png',ok:()=>S.meals.length>=10},
  {id:'shop',name:'Market Day',desc:'Generate a market list',art:'assets/avocado.png',ok:()=>!!S.game.market},
  {id:'chest',name:'Treasure Hunter',desc:'Open a weekly reward chest',art:'assets/avocado.png',ok:()=>Object.keys(S.game.chests||{}).length>=1},
+ {id:'taste',name:'Taste Explorer',desc:'Try a Surprise me meal',art:'assets/cookie.png',ok:()=>S.meals.some(m=>m.surprise)},
  {id:'dice',name:'Dice Roller',desc:'Shuffle your plan 5 times',art:'assets/tomatoes.png',ok:()=>S.game.shuffles>=5}
 ];
 const popQ=[];let popBusy=false;
@@ -510,7 +542,7 @@ function gamePanel(ts,dates,todayIdx){
 }
 function spinCells(){
   const cols=Math.max(1,activeTypes().length);const names=S.meals.map(m=>m.name);if(!names.length)return;
-  [...document.querySelectorAll('.chip2 .cname b[data-final]')].forEach((el,i)=>{
+  [...document.querySelectorAll('.chip2 .cname b[data-final], .gc .gcm .m[data-final]')].forEach((el,i)=>{
     const fin=el.dataset.final;const end=450+(i%cols)*180+Math.floor(i/cols)*40;const t0=performance.now();
     el.classList.add('rolling');
     (function tick(){if(performance.now()-t0>=end||!document.body.contains(el)){el.textContent=fin;el.classList.remove('rolling');return}el.textContent=names[Math.random()*names.length|0];setTimeout(tick,70)})();
@@ -576,7 +608,7 @@ function vFoods(){return `<div class="hdr">${LOGO}${stepper(3)}</div>
   <div class="actions"><button class="btn pill" data-act="backTo" data-to="times">Cancel</button><button class="btn pri pill" data-act="foodsNext" id="fnext" ${S.meals.length?'':'disabled'}>Next</button></div>
  </div>`}
 
-const THEMES=[{id:'meadow',name:'Meadow',c:['#E2F6BF','#7CC65A']},{id:'dusk',name:'Dusk',c:['#8062E4','#432A9E']},{id:'sunrise',name:'Sunrise',c:['#FFE9C8','#FF9E73']},{id:'lagoon',name:'Lagoon',c:['#CDF5F8','#3FBCD0']}];
+const THEMES=[{id:'plain',name:'Plain',c:['#FFFFFF','#EDEDED']},{id:'meadow',name:'Meadow',c:['#E2F6BF','#7CC65A']},{id:'dusk',name:'Dusk',c:['#8062E4','#432A9E']},{id:'sunrise',name:'Sunrise',c:['#FFE9C8','#FF9E73']},{id:'lagoon',name:'Lagoon',c:['#CDF5F8','#3FBCD0']}];
 const THEME_DECOR={meadow:['tree','bush','cloud','flower'],dusk:['mountain','star4','moon','star4'],sunrise:['sun','cloud','bush','cloud'],lagoon:['bubble','cloud','bubble','bubble']};
 const DECOR_W={tree:84,bush:78,cloud:112,flower:34,mountain:132,star4:26,moon:52,sun:82,bubble:34};
 const DECOR={
@@ -603,6 +635,102 @@ const FABICON={
  trophy:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v6a4 4 0 0 1-8 0zM8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 14v4M8 20h8"/></svg>`,
  theme:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2 0-1.4-1-1.6-1-2.8 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.5 17 3 12 3z"/><g fill="#1B1B1B" stroke="none"><circle cx="8" cy="11" r="1.3"/><circle cx="11" cy="7.5" r="1.3"/><circle cx="15.5" cy="8" r="1.3"/></g></svg>`
 };
+
+const SURPRISES=[
+ {name:'Kelewele',types:['supper','midnight'],url:'https://globalkitchentravels.com/kelewele/'},
+ {name:'Red Red',types:['lunch','supper'],url:'https://eatwithafia.com/ghanaian-beans-stew-red-red/'},
+ {name:'Groundnut soup (Nkatenkwan)',types:['lunch','supper'],url:'https://spicebreeze.com/blog/ghanaian-nkatenkwan/'},
+ {name:'Light soup',types:['lunch','supper'],url:'https://afrifoodnetwork.com/recipes/soup-recipes/light-soup/'},
+ {name:'Ampesi with kontomire stew',types:['lunch'],url:'https://fromourplace.ca/blogs/recipes/nadias-ampesi-with-kontomire-stew'},
+ {name:'Koose',types:['breakfast'],url:'https://fafagilbert.com/2018/05/07/perfect-koose-or-akara-recipe-fried-bean-fritters/'},
+ {name:'Tatale',types:['breakfast','lunch'],url:'https://mealsbymavis.com/tatale-savory-plantain-pancakes/'},
+ {name:'Ghanaian fried rice',types:['lunch','supper'],url:'https://eatwithafia.com/ghanaian-fried-rice/'},
+ {name:'Chicken chichinga',types:['supper','lunch'],url:'https://mealsbymavis.com/chicken-chichinga-ghanaian-chicken-kebab/'},
+ {name:'Bofrot',types:['breakfast','midnight'],url:'https://fafagilbert.com/2017/09/05/the-ghanaian-dry-doughnut-recipe-boflot-bofrot-togbei/'},
+ {name:'Yam oto',types:['breakfast','lunch'],url:'https://www.timeout.com/accra/food-and-drink/traditional-ghanaian-recipes-yam-oto'},
+ {name:'Grilled tilapia',types:['lunch','supper'],url:'https://www.finedininglovers.com/explore/recipes/whole-grilled-tilapia-zoe-adjonyoh'},
+ {name:'Tom Brown porridge',types:['breakfast'],url:'https://fafagilbert.com/2017/10/16/tom-brown-roasted-corn-meal-porridge/'},
+ {name:'Gari foto',types:['breakfast','lunch'],url:'https://www.betumi.com/2009/05/pot-luck-gari-foto.html'},
+ {name:'Omo tuo with groundnut soup',types:['lunch'],url:'https://www.lecreuset.co.uk/en_GB/omo-tuo-and-nkate-nkwan--rice-balls-and-groundnut-soup-/r0000000001976.html'},
+ {name:'Ghanaian meat pie',types:['breakfast','lunch'],url:'https://www.foodienotachef.com/flaky-ghanaian-meat-pie'},
+ {name:'Okro soup',types:['lunch','supper'],url:'https://fafagilbert.com/2017/09/18/the-perfect-okro-soup-recipe/'},
+ {name:'Aprapransa',types:['lunch','supper'],url:'https://www.ghanaweb.com/GhanaHomePage/entertainment/Recipes-How-to-prepare-Aprapransa-using-palm-nut-soup-543867'}
+];
+const pickOne=a=>a[Math.floor(Math.random()*a.length)];
+function undoSurprise(){
+  const u=UI.sur;if(!u)return;
+  if(S.plan&&S.plan[u.t]&&S.plan[u.t][u.d]===u.m)S.plan[u.t][u.d]=u.prev;
+  S.meals=S.meals.filter(m=>m.id!==u.m);UI.sur=null;save();
+}
+function doSurprise(){
+  if(!S.plan)return false;
+  const have=new Set(S.meals.map(m=>m.name.toLowerCase()));
+  const pool=SURPRISES.filter(x=>!have.has(x.name.toLowerCase()));
+  if(!pool.length){toast("You've tried every surprise!");return false}
+  const act=activeTypes();if(!act.length)return false;
+  const ids=act.map(t=>t.id),dates=weekDates(),todayIdx=(new Date().getDay()+6)%7;
+  const x=pickOne(pool);
+  let tt=x.types.filter(i=>ids.includes(i));if(!tt.length)tt=ids;
+  const cells=ty=>{const o=[];for(let d=todayIdx;d<7;d++)if(!S.game.eaten[dkey(dates[d])+'|'+ty])o.push([ty,d]);return o};
+  let c=[];tt.forEach(ty=>c=c.concat(cells(ty)));
+  if(!c.length)ids.forEach(ty=>c=c.concat(cells(ty)));
+  if(!c.length){toast('This week is all eaten. Nothing left to surprise!');return false}
+  const [ty,d]=pickOne(c);
+  const arr=S.plan[ty]||(S.plan[ty]=new Array(7).fill(null));
+  const m={id:uid(),name:x.name,types:[ty],recipe:x.url,surprise:true};
+  S.meals.push(m);
+  UI.sur={m:m.id,t:ty,d,prev:arr[d]};arr[d]=m.id;
+  S.game.surprises=(S.game.surprises||0)+1;save();return true;
+}
+function surpriseModal(){
+  const u=UI.sur;if(!u)return;const m=mealById(u.m),t=typeById(u.t),dt=weekDates()[u.d];
+  const names=SURPRISES.map(x=>x.name);
+  openModal(`<div class="sur"><h2>Surprise!</h2><p>Your mystery meal is landing...</p>
+   <div class="sbox"><div id="sart">${ART[t.art]}</div><b id="sname" aria-live="polite">${reduced()?esc(m.name):'???'}</b>
+   <span class="slot sreveal ${reduced()?'':'hide'}" id="sslot">${esc(t.name)} · ${DAYS[u.d]} ${dt.getDate()}</span></div>
+   <div class="linkrow sreveal ${reduced()?'':'hide'}" id="slink"><a class="btn pri" href="${esc(m.recipe)}" target="_blank" rel="noopener noreferrer">View recipe ↗</a></div>
+   <div class="row" style="justify-content:center"><button class="btn" data-act="reroll">Reroll</button><button class="btn" data-act="closeModal">Keep it</button></div></div>`);
+  if(reduced())return;
+  let n=0;const el=$('#sname');
+  const iv=setInterval(()=>{
+    const e=$('#sname');if(!e||e!==el){clearInterval(iv);return}
+    n++;if(n<14){e.textContent=pickOne(names);return}
+    clearInterval(iv);e.textContent=m.name;
+    ['#sslot','#slink'].forEach(q=>{const x=$(q);x&&x.classList.remove('hide')});
+    confetti(90);
+  },75);
+}
+const CS='stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"';
+const CR={
+ bird:c=>`<svg viewBox="0 0 48 32"><path d="M8 20L1 17M8 22L1 25" ${CS} fill="none"/><ellipse cx="22" cy="19" rx="14" ry="9" fill="${c}" ${CS}/><circle cx="35" cy="13" r="7" fill="${c}" ${CS}/><path d="M41.5 11.5l6 2.5-6 2.5z" fill="#FFB000" ${CS}/><circle cx="37" cy="12" r="1.5" fill="#1B1B1B"/><path d="M13 17c2-9 9-12 14-9-1 6-6 11-14 9z" class="w" fill="#fff" fill-opacity=".85" ${CS}/></svg>`,
+ bfly:c=>`<svg viewBox="0 0 48 32"><path d="M24 16C16 2 4 4 6 14c1 6 10 6 18 2z" class="w" fill="${c}" ${CS}/><path d="M24 16C32 2 44 4 42 14c-1 6-10 6-18 2z" class="w" fill="${c}" ${CS}/><path d="M24 16C17 20 10 30 16 30c5 0 8-6 8-14zM24 16c7 4 14 14 8 14-5 0-8-6-8-14z" fill="#fff" fill-opacity=".8" ${CS}/><path d="M24 9v14M24 9c-1-4-3-5-5-5M24 9c1-4 3-5 5-5" fill="none" ${CS}/></svg>`,
+ rabbit:c=>`<svg viewBox="0 0 48 32"><circle cx="7" cy="21" r="3.6" fill="#fff" ${CS}/><ellipse cx="21" cy="22" rx="14" ry="8" fill="${c}" ${CS}/><circle cx="35" cy="17" r="6.5" fill="${c}" ${CS}/><path d="M33 12C30 2 33 1 35 2c2 1 2 6 1 10z" fill="${c}" ${CS}/><path d="M38 12c0-8 4-9 6-7 1 2-1 6-3 9z" fill="${c}" ${CS}/><circle cx="38" cy="16.5" r="1.4" fill="#1B1B1B"/><path d="M11 28v3M26 29v2" ${CS} fill="none"/></svg>`,
+ bat:()=>`<svg viewBox="0 0 48 32"><path d="M24 12C18 4 8 3 2 6c3 3 3 7 3 10 3-2 6-1 8 2 3-2 6-1 8 2 1 2 2 4 3 4s2-2 3-4c2-3 5-4 8-2 2-3 5-4 8-2 0-3 0-7 3-10-6-3-16-2-22 6z" class="w" fill="#2A1670" stroke="#E2D8FF" stroke-width="2.2" stroke-linejoin="round"/><circle cx="24" cy="14" r="5" fill="#2A1670" stroke="#E2D8FF" stroke-width="2.2"/><path d="M20 10l-1-5 4 3zM28 10l1-5-4 3z" fill="#2A1670" stroke="#E2D8FF" stroke-width="2" stroke-linejoin="round"/><circle cx="22" cy="14" r="1.2" fill="#FFD86B"/><circle cx="26" cy="14" r="1.2" fill="#FFD86B"/></svg>`,
+ firefly:()=>`<svg viewBox="0 0 48 32"><circle cx="24" cy="16" r="15" fill="#FFD86B" opacity=".25"/><circle cx="24" cy="16" r="9" fill="#FFD86B" opacity=".45"/><path d="M20 14c-4-7-9-6-10-4 2 3 6 4 10 4z" class="w" fill="#fff" fill-opacity=".85" ${CS}/><ellipse cx="25" cy="17" rx="7" ry="4.6" fill="#FFE98F" ${CS}/><circle cx="31" cy="16" r="2.6" fill="#3A2A6B" ${CS}/></svg>`,
+ owl:()=>`<svg viewBox="0 0 48 32"><path d="M15 14C6 9 2 15 4 25c5-1 9-4 11-8z" class="w" fill="#A6834A" ${CS}/><path d="M33 14c9-5 13 1 11 11-5-1-9-4-11-8z" class="w" fill="#A6834A" ${CS}/><ellipse cx="24" cy="18" rx="10" ry="12" fill="#C9A66B" ${CS}/><circle cx="20" cy="14" r="4" fill="#fff" ${CS}/><circle cx="28" cy="14" r="4" fill="#fff" ${CS}/><circle cx="20.5" cy="14" r="1.6" fill="#1B1B1B"/><circle cx="28.5" cy="14" r="1.6" fill="#1B1B1B"/><path d="M22 19h4l-2 3z" fill="#FFB000" ${CS}/></svg>`,
+ fish:c=>`<svg viewBox="0 0 48 32"><path d="M11 16L1 7v18z" fill="${c}" ${CS}/><ellipse cx="26" cy="16" rx="16" ry="10" fill="${c}" ${CS}/><path d="M22 7c3-5 9-5 11-3" fill="none" ${CS}/><path d="M24 9c3 4 3 10 0 14" fill="none" ${CS} opacity=".6"/><circle cx="36" cy="13" r="2.4" fill="#fff" ${CS}/><circle cx="36.6" cy="13" r="1" fill="#1B1B1B"/></svg>`,
+ jelly:()=>`<svg viewBox="0 0 48 32"><path d="M15 17c-2 6 2 8 0 14M24 17c-2 6 2 8 0 14M33 17c-2 6 2 8 0 14" fill="none" ${CS}/><path d="M8 17a16 14 0 0 1 32 0z" fill="#F7A8E0" ${CS}/><circle cx="19" cy="12" r="1.5" fill="#1B1B1B"/><circle cx="29" cy="12" r="1.5" fill="#1B1B1B"/></svg>`,
+ turtle:()=>`<svg viewBox="0 0 48 32"><ellipse cx="14" cy="27" rx="5" ry="3" fill="#8EDB8A" ${CS}/><ellipse cx="30" cy="27" rx="5" ry="3" fill="#8EDB8A" ${CS}/><path d="M7 24a16 14 0 0 1 32 0z" fill="#58C46A" ${CS}/><path d="M16 24c0-6 3-10 7-13M26 24c0-6-1-9-3-13" fill="none" ${CS} opacity=".55"/><circle cx="42" cy="19" r="5" fill="#8EDB8A" ${CS}/><circle cx="43.5" cy="18" r="1.2" fill="#1B1B1B"/></svg>`
+};
+const CRIT={
+ meadow:[{cls:'fly',w:56,d:[14,22],svg:()=>CR.bird('#F25C54')},{cls:'fly',w:44,d:[18,28],svg:()=>CR.bfly('#FFB000')},{cls:'hop',w:62,d:[20,30],svg:()=>CR.rabbit('#fff')}],
+ dusk:[{cls:'fly',w:60,d:[12,20],svg:CR.bat},{cls:'fly',w:38,d:[20,30],svg:CR.firefly},{cls:'fly',w:56,d:[16,26],svg:CR.owl}],
+ sunrise:[{cls:'fly',w:56,d:[14,22],svg:()=>CR.bird('#FFB000')},{cls:'fly',w:44,d:[18,28],svg:()=>CR.bfly('#F2704F')},{cls:'hop',w:62,d:[20,30],svg:()=>CR.rabbit('#F2A25C')}],
+ lagoon:[{cls:'swim',w:60,d:[14,22],svg:()=>CR.fish('#FF9E4A')},{cls:'swim',w:52,d:[16,26],svg:()=>CR.fish('#7B6BE8')},{cls:'swim',w:44,d:[22,32],svg:CR.jelly},{cls:'swim',w:72,d:[26,36],svg:CR.turtle}]
+};
+function spawnCritter(){
+  if(reduced()||document.hidden||S.step!=='plan')return;
+  const L=$('.critters');if(!L||L.children.length>=3)return;
+  const sc=$('.scene');const th=(sc&&sc.dataset.theme)||'meadow';
+  const k=pickOne(CRIT[th]||CRIT.meadow);
+  const el=document.createElement('div');el.className='crit '+k.cls+(Math.random()<.5?' rtl':'');
+  el.style.top=(4+Math.random()*88).toFixed(1)+'%';el.style.width=k.w+'px';
+  el.style.setProperty('--dur',(k.d[0]+Math.random()*(k.d[1]-k.d[0])).toFixed(1)+'s');
+  el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';
+  el.addEventListener('animationend',e=>{if(e.target===el)el.remove()});L.appendChild(el);
+}
+(function loop(){spawnCritter();setTimeout(loop,2200+Math.random()*3800)})();
+FABICON.gift=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19v-3.5h-19zM12 5.5V20M12 5.5C10 2 6 2.5 7 5c.4 1 3 .5 5 .5zM12 5.5c2-3.500 6-3 5-.5-.4 1-3 .5-5 .5z"/></svg>`;
 function chipHtml(t,d,seen,dk,state,i){
   const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);
   if(!m)return `<div class="chip2 empty ${state}" style="--i:${i}"><button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="tx"><b>+ Add ${esc(t.name.toLowerCase())}</b></span></button></div>`;
@@ -613,9 +741,10 @@ function chipHtml(t,d,seen,dk,state,i){
   }
   const cnt=S.plan[t.id].filter(x=>x===id).length;
   const pair=PAIR.find(p=>p[0].test(m.name.toLowerCase()));
-  const tag=pair&&!seen.has(id)?`<span class="tag">Try with ${pair[1]}!</span>`:'';
+  const tag=m.surprise?`<span class="tag sp">Surprise!</span>`:(pair&&!seen.has(id)?`<span class="tag">Try with ${pair[1]}!</span>`:'');
+  const rl=m.recipe?`<a class="rlink" href="${esc(m.recipe)}" target="_blank" rel="noopener noreferrer" aria-label="Open recipe for ${esc(m.name)} (new tab)" title="Recipe">↗</a>`:'';
   seen.add(id);
-  return `<div class="chip2 ${done?'done':''} ${state}" style="--i:${i}">${eat}<button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal">${ART[t.art]}<span class="tx"><b data-final="${esc(m.name)}">${esc(m.name)}</b><small><span>${esc(t.name)} · ${fmt(t.from)}</span>${cnt>=2?`<span class="fl">${ART.flame} ${cnt}x</span>`:''}${tag}</small></span></button></div>`;
+  return `<div class="chip2 ${done?'done':''} ${state}" style="--i:${i}">${eat}<button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal">${ART[t.art]}<span class="tx"><b data-final="${esc(m.name)}">${esc(m.name)}</b><small><span>${esc(t.name)} · ${fmt(t.from)}</span>${cnt>=2?`<span class="fl">${ART.flame} ${cnt}x</span>`:''}${tag}</small></span></button>${rl}</div>`;
 }
 function stopHtml(d,ts,dates,todayIdx,seenMap,counter){
   const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
@@ -648,7 +777,8 @@ function mapHtml(ts,dates,todayIdx){
   const lv=levelOf(xpTotal());
   return `<div class="scene" data-theme="${th}">
    <div class="decor" aria-hidden="true">${dec.join('')}</div>
-   <div class="fabs"><div class="fabcol">${fab('market','Market','market','pri')}${fab('addMealOpen','Add meal','add')}${fab('shuffle','Shuffle','dice')}${fab('badges','Badges','trophy')}${fab('theme','Theme','theme')}</div></div>
+   <div class="critters" aria-hidden="true"></div>
+   <div class="fabs"><div class="fabcol">${fab('surprise','Surprise','gift','pri')}${fab('market','Market','market')}${fab('addMealOpen','Add meal','add')}${fab('shuffle','Shuffle','dice')}${fab('badges','Badges','trophy')}${fab('theme','Theme','theme')}</div></div>
    <div class="hud"><span class="pill">Lv ${lv}</span><span class="pill">Your week · ${fmtD(dates[0])} – ${fmtD(dates[6])}</span><span class="pill">${ART.flame} ${streak()}</span></div>
    <div class="mapwrap"><svg id="pathsvg" class="pathsvg" aria-hidden="true"></svg>${stops}</div>
   </div>`;
@@ -667,16 +797,37 @@ function drawPath(){
 function schedulePath(){if(window.cancelAnimationFrame)cancelAnimationFrame(pathT);pathT=window.requestAnimationFrame?requestAnimationFrame(drawPath):0}
 window.addEventListener('resize',schedulePath);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(schedulePath);
+
+function plainCell(t,d,seen,state,dk){
+  const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);const last=d===6?'last':'';
+  if(!m)return `<div class="gc ${last}"><button class="gcm" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="m add">+ Add a meal</span></button></div>`;
+  const k=dk+'|'+t.id;const done=!!S.game.eaten[k];
+  const eat=(state==='today'||(state==='past'&&done))?`<span class="eatw"><button class="eat ${done?'on':''} ${UI.pop===k?'pop':''}" data-act="eat" data-t="${t.id}" data-dk="${dk}" ${state==='past'?'disabled':''} aria-pressed="${done}" aria-label="${done?'Mark as not eaten':'Mark as eaten'}: ${esc(m.name)}">${TICK}</button></span>`:'';
+  const cnt=S.plan[t.id].filter(x=>x===id).length;
+  const pair=PAIR.find(p=>p[0].test(m.name.toLowerCase()));
+  const tag=m.surprise?`<span class="tag sp">Surprise!</span>`:(pair&&!seen.has(id)?`<span class="tag">Try with ${pair[1]}!</span>`:'');
+  seen.add(id);
+  const rl=m.recipe?`<a class="rlink" href="${esc(m.recipe)}" target="_blank" rel="noopener noreferrer" aria-label="Open recipe for ${esc(m.name)} (new tab)" title="Recipe">↗</a>`:'';
+  return `<div class="gc ${done?'done':''} ${last}">${eat}<button class="gcm" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal"><span class="m" data-final="${esc(m.name)}">${esc(m.name)}</span><span class="meta">${tag}${cnt>=2?`<span>${ART.flame}</span>`:''}<span>${ART.repeat} ${cnt}x this week</span></span></button>${rl}</div>`}
+function plainGrid(ts,dates,todayIdx){
+  const cols=`110px repeat(${ts.length},minmax(210px,1fr))`;
+  const seenMap={};ts.forEach(t=>seenMap[t.id]=new Set());let rows='';
+  DAYS.forEach((dn,d)=>{const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
+    rows+=`<div class="row ${d===todayIdx?'today':''}" style="display:contents"><div class="gd ${d===6?'last':''}"><b>${dn}</b><span class="num">${dates[d].getDate()}</span></div>${ts.map(t=>plainCell(t,d,seenMap[t.id],state,dk)).join('')}</div>`});
+  const heads=ts.map(t=>`<div class="gh"><div style="width:26px;height:26px">${ART[t.art]}</div><div><div class="n">${esc(t.name)}</div><div class="t">${fmt(t.from)} - ${fmt(t.to)}</div></div></div>`).join('');
+  return `<div class="scroller"><div class="grid" style="grid-template-columns:${cols}"><div class="gh" style="border-left:0"></div>${heads}${rows}</div></div>`}
 function vPlan(){
   const ts=activeTypes();const dates=weekDates();const todayIdx=(new Date().getDay()+6)%7;
   const emptyTypes=ts.filter(t=>!S.meals.some(m=>m.types.includes(t.id)));
+  const plain=(S.theme||'meadow')==='plain';
+  const ptools=plain?`<button class="btn pri" data-act="surprise">Surprise me</button><button class="btn" data-act="market">Market list</button><button class="btn" data-act="addMealOpen">+ Add Meal</button><button class="btn" data-act="shuffle">Shuffle</button><button class="btn" data-act="badges">Badges</button><button class="btn" data-act="theme">Theme</button>`:'';
   return `<div class="topbar">${LOGO}<div class="tools">
-   <button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
+   ${ptools}<button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
    <button class="me" data-act="avatarMenu" aria-haspopup="menu"><span class="av">${esc(initials())}</span>${esc(dname())}</button>
    ${UI.pm?`<div class="pm" role="menu"><button data-act="editTimes">Edit meal times</button><button data-act="editMeals">Edit my meals</button><button data-act="signout">Sign out</button></div>`:''}
   </div></div>
   ${gamePanel(ts,dates,todayIdx)}
-  ${mapHtml(ts,dates,todayIdx)}
+  ${plain?plainGrid(ts,dates,todayIdx):mapHtml(ts,dates,todayIdx)}
   <p class="note">${emptyTypes.length?`No meals added for ${emptyTypes.map(t=>esc(t.name)).join(', ')} yet. Use Add meal to fill ${emptyTypes.length>1?'them':'it'}. `:''}Tick today's meals as you eat them to earn XP. Tap a meal's name to swap it.</p>`}
 
 /* ---------- render ---------- */
@@ -762,6 +913,8 @@ const A={
   closeModal();render();toast(name+' added')},
  swap(el){swapModal(el.dataset.t,+el.dataset.d)},
  setMeal(el){S.plan[el.dataset.t][+el.dataset.d]=el.dataset.m;save();closeModal();render()},
+ surprise(el){UI.sur=null;if(!doSurprise())return;render();surpriseModal()},
+ reroll(){undoSurprise();if(!doSurprise()){render();return}render();surpriseModal()},
  market(){track(()=>{S.game.market=true;save()});marketModal()},
  copyList(){const t=window.__list||'';try{navigator.clipboard.writeText(t).then(()=>toast('List copied'),()=>toast('Select the list to copy'))}catch(e){toast('Select the list to copy')}},
  closeModal,
