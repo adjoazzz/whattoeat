@@ -1,3 +1,7 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
 <title>What's Eat</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,7 +166,7 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 
 /* game layer */
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.stepper{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);font-weight:600}
+.stepper{white-space:nowrap;display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);font-weight:600}
 .stepper .bars{display:flex;gap:5px}
 .stepper .bars i{width:30px;height:6px;border-radius:99px;background:#EADFC8}
 .stepper .bars i.on{background:var(--brand)}
@@ -290,6 +294,19 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .tcardx .sw{height:64px;border-radius:9px;display:block}
 .tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.ptools{display:flex;flex-wrap:wrap;gap:10px;margin:-8px 0 20px}
+.ptools .btn{height:34px;font-size:12px;padding:0 14px;border-radius:7px;white-space:nowrap}
+.plist{display:none}
+.pday{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;background:#fff}
+.pday.today{border-color:var(--brand)}
+.pday h4{margin:0;padding:10px 14px;font-size:12.5px;font-weight:600;letter-spacing:.04em;background:#FBFBFB;display:flex;gap:10px;align-items:baseline}
+.pday.today h4{background:var(--brand-tint);color:var(--brand-deep)}
+.pday h4 span{font-weight:400;color:#888}
+.pday .prow{display:flex;align-items:stretch;border-top:1px solid var(--line)}
+.pday .plab{flex:none;width:92px;padding:10px 12px;font-size:11px;color:var(--muted);display:flex;flex-direction:column;justify-content:center;gap:1px}
+.pday .plab b{font-size:12px;color:#1B1B1B;font-weight:600}
+.pday .gc{flex:1;min-width:0;border-bottom:0;min-height:56px;padding:8px 12px}
+
 .sbox{position:relative;overflow:hidden;border:2px solid #1B1B1B;border-radius:18px;box-shadow:0 5px 0 #1B1B1B;padding:30px 14px 26px;margin:8px 0 18px;background:radial-gradient(circle at 18% 20%,rgba(255,255,255,.6),transparent 42%),radial-gradient(circle at 85% 90%,rgba(255,255,255,.35),transparent 40%),linear-gradient(135deg,var(--c,#F5C518),color-mix(in srgb,var(--c,#F5C518) 55%,#8B5CF6))}
 .sbox::before,.sbox::after{content:"";position:absolute;width:22px;height:22px;background:#fff;opacity:.9;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
 .sbox::before{left:16px;top:14px}
@@ -347,7 +364,20 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;text-decorat
 }
 @media (max-width:720px){
   .card{padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  .times{grid-template-columns:1fr}
+  .times{grid-template-columns:minmax(0,1fr)}
+  .rng{gap:6px}
+  .rng input{width:auto;flex:1;min-width:0;padding:0 4px;font-size:11.5px}
+  .tcard{min-width:0;padding:14px 12px;gap:10px}
+  .tcard .tart{width:46px;flex:none}
+  .tcard .tart img{width:100%;height:auto}
+  .wheelwrap{width:min(250px,100%)}
+  .stepper{gap:8px;font-size:11px}
+  .stepper .bars i{width:22px}
+  .ptools{flex-wrap:nowrap;overflow-x:auto;margin-inline:-2px;padding:2px 2px 6px;scrollbar-width:none}
+  .ptools .btn{flex:none}
+  .scroller{display:none}
+  .plist{display:block}
+  .pday .gcm{text-align:right}
   .back{position:static;margin:14px 0 0}
   .legend{display:none}
   .mealrow{flex-wrap:wrap}
@@ -853,18 +883,21 @@ function plainGrid(ts,dates,todayIdx){
   DAYS.forEach((dn,d)=>{const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
     rows+=`<div class="row ${d===todayIdx?'today':''}" style="display:contents"><div class="gd ${d===6?'last':''}"><b>${dn}</b><span class="num">${dates[d].getDate()}</span></div>${ts.map(t=>plainCell(t,d,seenMap[t.id],state,dk)).join('')}</div>`});
   const heads=ts.map(t=>`<div class="gh"><div style="width:26px;height:26px">${ART[t.art]}</div><div><div class="n">${esc(t.name)}</div><div class="t">${fmt(t.from)} - ${fmt(t.to)}</div></div></div>`).join('');
-  return `<div class="scroller"><div class="grid" style="grid-template-columns:${cols}"><div class="gh" style="border-left:0"></div>${heads}${rows}</div></div>`}
+  const seen2={};ts.forEach(t=>seen2[t.id]=new Set());
+  const list=DAYS.map((dn,d)=>{const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
+    return `<div class="pday ${d===todayIdx?'today':''}"><h4>${dn}<span>${dates[d].getDate()}</span></h4>${ts.map(t=>`<div class="prow"><div class="plab"><b>${esc(t.name)}</b>${fmt(t.from)}</div>${plainCell(t,d,seen2[t.id],state,dk).replace(/ last"/,'"')}</div>`).join('')}</div>`}).join('');
+  return `<div class="scroller"><div class="grid" style="grid-template-columns:${cols}"><div class="gh" style="border-left:0"></div>${heads}${rows}</div></div><div class="plist">${list}</div>`}
 function vPlan(){
   const ts=activeTypes();const dates=weekDates();const todayIdx=(new Date().getDay()+6)%7;
   const emptyTypes=ts.filter(t=>!S.meals.some(m=>m.types.includes(t.id)));
   const plain=(S.theme||'meadow')==='plain';
-  const ptools=plain?`<button class="btn pri" data-act="surprise">Surprise me</button><button class="btn" data-act="wheel">Spin the wheel</button><button class="btn" data-act="market">Market list</button><button class="btn" data-act="addMealOpen">+ Add Meal</button><button class="btn" data-act="shuffle">Shuffle</button><button class="btn" data-act="badges">Badges</button><button class="btn" data-act="theme">Theme</button>`:'';
+  const ptools=plain?`<div class="ptools"><button class="btn pri" data-act="surprise">Surprise me</button><button class="btn" data-act="wheel">Spin the wheel</button><button class="btn" data-act="market">Market list</button><button class="btn" data-act="addMealOpen">+ Add Meal</button><button class="btn" data-act="shuffle">Shuffle</button><button class="btn" data-act="badges">Badges</button><button class="btn" data-act="theme">Theme</button></div>`:'';
   return `<div class="topbar">${LOGO}<div class="tools">
-   ${ptools}<button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
+   <button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
    <button class="me" data-act="avatarMenu" aria-haspopup="menu"><span class="av">${esc(initials())}</span>${esc(dname())}</button>
    ${UI.pm?`<div class="pm" role="menu"><button data-act="editTimes">Edit meal times</button><button data-act="editMeals">Edit my meals</button><button data-act="signout">Sign out</button></div>`:''}
   </div></div>
-  ${gamePanel(ts,dates,todayIdx)}
+  ${ptools}${gamePanel(ts,dates,todayIdx)}
   ${plain?plainGrid(ts,dates,todayIdx):mapHtml(ts,dates,todayIdx)}
   <p class="note">${emptyTypes.length?`No meals added for ${emptyTypes.map(t=>esc(t.name)).join(', ')} yet. Use Add meal to fill ${emptyTypes.length>1?'them':'it'}. `:''}Tick today's meals as you eat them to earn XP. Tap a meal's name to swap it.</p>`}
 
