@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&family=Inter:opsz,wght@14..32,400..700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout: one white rounded card on a light-grey ground. Onboarding is a centred column; the weekly plan is a wide day-by-meal grid. */
 :root{
@@ -21,6 +21,7 @@
   --f-logo:'Fredoka','Baloo 2','Nunito',system-ui,sans-serif;
   --f-head:'Recoleta','Fraunces','Georgia',serif;
   --f-body:'Inter Display','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-num:'Oswald','Arial Narrow',system-ui,sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -118,8 +119,21 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .gd{padding:0 18px;display:flex;gap:16px;align-items:center;font-size:11.5px;color:#777;letter-spacing:.04em;border-bottom:1px solid var(--line);min-height:62px}
 .gd b{font-weight:500}
 .gd span.num{color:#777}
-.gc{border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 18px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;background:transparent;text-align:right;border-top:0;border-right:0;border-radius:0;width:100%}
+.gc{border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 14px 9px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:62px}
 .gc:hover{background:#FAFAFA}
+.gcm{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;background:none;border:0;padding:0;text-align:right}
+.gc.done{background:#EEF9F3}
+.gc.done .m{color:#0A7A4E}
+.eatw{display:flex;align-items:center;gap:7px;flex:none}
+.eat{width:26px;height:26px;border-radius:50%;border:1.5px solid #cfcfcf;background:#fff;flex:none;display:grid;place-items:center;padding:0;transition:transform .15s,background .15s,border-color .15s}
+.eat:hover:not([disabled]){border-color:var(--green);transform:scale(1.1)}
+.eat svg{width:13px;height:13px;opacity:0}
+.eat.on{background:var(--green);border-color:var(--green)}
+.eat.on svg{opacity:1}
+.eat[disabled]{cursor:default}
+.eat.pop{animation:popin .45s cubic-bezier(.3,1.6,.5,1)}
+.ask{font-size:10px;font-weight:600;color:var(--brand-deep);white-space:nowrap}
+.ask.ok{color:#0A7A4E}
 .gc .m{font-size:12px;font-weight:600}
 .gc .meta{display:flex;align-items:center;gap:10px;font-size:10px;color:#8a8a8a}
 .gc .meta span{display:inline-flex;align-items:center;gap:3px}
@@ -145,6 +159,146 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .ml input{accent-color:var(--brand);width:16px;height:16px}
 .ml input:checked + span{text-decoration:line-through;color:#aaa}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#222;color:#fff;border-radius:999px;padding:10px 18px;font-size:12.5px;z-index:80}
+
+/* game layer */
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.stepper{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);font-weight:600}
+.stepper .bars{display:flex;gap:5px}
+.stepper .bars i{width:30px;height:6px;border-radius:99px;background:#EADFC8}
+.stepper .bars i.on{background:var(--brand)}
+.goal{width:100%;margin-top:14px;text-align:left}
+.bar{height:8px;border-radius:99px;background:#F1E3C2;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .5s}
+.goal .bar{margin:0 0 6px}
+.goal .gt{font-size:11.5px;color:#6a6a6a;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.goal .gt b{color:#0A7A4E}
+.chip.pop{animation:popin .35s cubic-bezier(.3,1.6,.5,1)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:12px}
+.sc{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;display:flex;gap:14px;align-items:center;min-width:0}
+.sc.lv{background:var(--brand-tint);border-color:var(--brand-line)}
+.sc small,.ql{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.big{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:20px;font-weight:600;line-height:1.15}
+.xt{font-size:11px;color:#7a7a7a}
+.sdots{display:flex;gap:4px;margin-top:7px}
+.sd{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:600;background:#F1F1F1;color:#9a9a9a}
+.sd.on{background:var(--brand);color:#fff}
+.sd.now{outline:2px solid var(--brand-line)}
+.flamebig svg{width:34px;height:38px;display:block}
+.ring{position:relative;width:62px;height:62px;flex:none}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:12px}
+.quest{display:flex;align-items:center;gap:16px;border:1px solid var(--brand-line);background:#FFFCF4;border-radius:14px;padding:12px 18px;margin-bottom:16px;flex-wrap:wrap}
+.quest img.mas{width:92px;height:auto;flex:none}
+.quest .txt{flex:1;min-width:220px}
+.quest .txt b{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:17px;font-weight:600;display:block;margin:2px 0}
+.quest .txt span.p{font-size:12px;color:#666}
+.pips{display:flex;gap:8px;margin-top:9px;align-items:center;flex-wrap:wrap}
+.pip{width:32px;height:32px;border-radius:50%;border:1.5px dashed #d6d6d6;display:grid;place-items:center;padding:4px;background:#fff}
+.pip img{width:100%;height:100%;object-fit:contain;filter:grayscale(1);opacity:.5}
+.pip.on{border:1.5px solid var(--green);background:#EEF9F3}
+.pip.on img{filter:none;opacity:1}
+.bbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:600}
+.bbtn:hover{border-color:var(--brand)}
+.bstack{display:flex}
+.bstack img{width:28px;height:28px;object-fit:contain;margin-left:-6px;background:#fff;border-radius:50%;border:1.5px solid #fff}
+.bstack img:first-child{margin-left:0}
+.bstack img.lock{filter:grayscale(1);opacity:.4}
+.bgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.bcard{border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center;font-size:11.5px}
+.bcard img{width:64px;height:56px;object-fit:contain;display:block;margin:0 auto 6px}
+.bcard.lock img{filter:grayscale(1);opacity:.35}
+.bcard b{display:block;font-size:12.5px}
+.bcard span{color:var(--muted)}
+.badgepop{position:fixed;top:calc(18px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#fff;border:1.5px solid var(--brand);border-radius:16px;padding:10px 18px 10px 10px;display:flex;gap:12px;align-items:center;z-index:95;box-shadow:0 10px 30px rgba(241,171,26,.3);animation:dropin .45s cubic-bezier(.3,1.5,.5,1);max-width:calc(100vw - 32px)}
+.badgepop.out{opacity:0;transform:translateX(-50%) translateY(-12px);transition:all .3s}
+.badgepop img{width:52px;height:46px;object-fit:contain;flex:none}
+.badgepop small{display:block;color:var(--brand-deep);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.badgepop b{display:block;font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:16px}
+.badgepop span{font-size:11.5px;color:#666}
+.xppop{position:fixed;font-weight:700;color:var(--brand-deep);font-size:15px;pointer-events:none;z-index:96;animation:floatup 1s ease-out forwards;text-shadow:0 1px 0 #fff;white-space:nowrap}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90}
+.lvl{text-align:center}
+.lvl img{width:150px;height:auto;display:block;margin:0 auto 8px}
+.lvl .row{justify-content:center}
+.rolling{color:#b9b9b9!important}
+@keyframes popin{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes dropin{from{opacity:0;transform:translateX(-50%) translateY(-24px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes floatup{from{opacity:1;transform:translate(-50%,-8px)}to{opacity:0;transform:translate(-50%,-56px)}}
+@keyframes cellin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reveal .chip2{animation:cellin .45s ease backwards;animation-delay:calc(var(--i,0)*30ms)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* world map */
+.sc,.quest,.bbtn{border:2px solid #1B1B1B;box-shadow:0 4px 0 #1B1B1B}
+.bbtn:hover{border-color:#1B1B1B;transform:translateY(1px)}
+.scene{--ink:#1B1B1B;position:relative;border-radius:22px;overflow:clip;padding:18px 90px 34px 18px;background:linear-gradient(180deg,var(--sky1),var(--sky2) 45%,var(--sky3));border:2px solid var(--ink)}
+.scene::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.6;background-repeat:repeat-y;background-size:100% 1000px;
+  background-image:radial-gradient(ellipse 55% 11% at 0% 14%,var(--hill1) 0 97%,transparent 100%),radial-gradient(ellipse 50% 10% at 100% 42%,var(--hill2) 0 97%,transparent 100%),radial-gradient(ellipse 46% 9% at 4% 74%,var(--hill2) 0 97%,transparent 100%),radial-gradient(ellipse 52% 10% at 100% 96%,var(--hill1) 0 97%,transparent 100%)}
+.scene[data-theme=meadow]{--sky1:#E2F6BF;--sky2:#ABDD7C;--sky3:#7CC65A;--hill1:#5FB04A;--hill2:#4E9E3F;--path:#EAF6C4;--path-edge:#B4D77C;--stone:#FAFDE8;--d1:#3E9A3C;--d2:#2F7D32;--d3:#8A5A2B;--cloud:#fff}
+.scene[data-theme=dusk]{--ink:#1D0F4F;--sky1:#8062E4;--sky2:#5A3CC0;--sky3:#432A9E;--hill1:#6A4BD0;--hill2:#8466E6;--path:#BBA9F6;--path-edge:#8C75E0;--stone:#E2D8FF;--d1:#FFD86B;--d2:#4A2FA6;--d3:#fff;--cloud:#9C86EC}
+.scene[data-theme=dusk]::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(#fff 1.2px,transparent 1.7px),radial-gradient(#FFD86B 1px,transparent 1.5px);background-size:90px 140px,130px 170px;background-position:10px 20px,60px 90px}
+.scene[data-theme=sunrise]{--ink:#3A1B12;--sky1:#FFE9C8;--sky2:#FFC48A;--sky3:#FF9E73;--hill1:#FF9368;--hill2:#F77E6A;--path:#FFF2D8;--path-edge:#F2B98A;--stone:#FFFBF0;--d1:#FFB000;--d2:#F2704F;--d3:#B8553A;--cloud:#fff7ec}
+.scene[data-theme=lagoon]{--ink:#0B3C4B;--sky1:#CDF5F8;--sky2:#7FDDE8;--sky3:#3FBCD0;--hill1:#2CAABD;--hill2:#1E93AD;--path:#E5FBFF;--path-edge:#9FE0EC;--stone:#FFFFFF;--d1:#FFFFFF;--d2:#1E93AD;--d3:#0E6F8C;--cloud:#ffffffcc}
+.decor{position:absolute;inset:0;pointer-events:none;z-index:1}
+.dc{position:absolute}
+.dc svg{display:block;width:100%;height:auto}
+.hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;position:relative;z-index:6}
+.pill{background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:999px;box-shadow:0 3px 0 var(--ink);padding:5px 14px;font-family:var(--f-num);font-weight:600;font-size:14px;letter-spacing:.03em;display:inline-flex;align-items:center;gap:7px}
+.fabs{position:sticky;top:calc(14px + env(safe-area-inset-top,0px));height:0;z-index:20}
+.fabcol{position:absolute;right:-72px;top:0;display:flex;flex-direction:column;gap:10px}
+.fab{width:58px;border:2px solid var(--ink);background:#fff;color:#1B1B1B;border-radius:16px;box-shadow:0 4px 0 var(--ink);padding:7px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-num);font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.fab svg{width:22px;height:22px}
+.fab.pri{background:var(--brand)}
+.fab:active,.nbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.mapwrap{position:relative;max-width:720px;margin:0 auto;z-index:2}
+.pathsvg{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:1}
+.stop{position:relative;min-height:214px;padding:16px 0;z-index:3}
+.node{position:absolute;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:4}
+.stop.L .node{left:23%}
+.stop.R .node{left:77%}
+.stop.chest{min-height:190px}
+.node.cn{left:50%!important}
+.nbtn{width:76px;height:76px;border-radius:50%;border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);display:grid;place-items:center;background:#fff;padding:0;transition:transform .12s}
+.nbtn svg{width:38px;height:38px}
+.nbtn.today{background:#FFC933;animation:bob 1.6s ease-in-out infinite}
+.nbtn.done{background:#34C77B}
+.nbtn.future{background:#C6CCD4}
+.dlabel{font-family:var(--f-num);font-weight:600;font-size:13px;letter-spacing:.05em;background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:10px;padding:1px 10px;box-shadow:0 3px 0 var(--ink);white-space:nowrap}
+.bubble{display:flex;align-items:center;gap:6px;background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:12px;padding:3px 10px 3px 6px;font-family:var(--f-num);font-weight:600;font-size:13px;letter-spacing:.03em;white-space:nowrap;box-shadow:0 3px 0 var(--ink);position:relative}
+.bubble:after{content:"";position:absolute;left:50%;bottom:-8px;width:10px;height:10px;background:#fff;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
+.chestbtn{width:108px;height:90px;border-radius:26px;--cf:#C9CED6;--cf2:#DADFE6;--cl:#9aa3ad;background:#E9ECF0}
+.chestbtn svg{width:66px;height:58px}
+.chestbtn.ready{--cf:#FFB200;--cf2:#FFC933;--cl:#fff;background:#FFF3C4;animation:bob 1.6s ease-in-out infinite}
+.chestbtn.claimed{--cf:#34C77B;--cf2:#5ED79A;--cl:#fff;background:#E2F9EC}
+.chips2{position:relative;z-index:3;display:flex;flex-direction:column;gap:11px;width:50%}
+.stop.L .chips2{margin-left:auto}
+.stop.R .chips2{margin-right:auto}
+.chip2{display:flex;align-items:center;gap:8px;background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:16px;padding:7px 10px 7px 8px;box-shadow:0 4px 0 var(--ink);min-width:0}
+.chip2 .eat{border-color:#1B1B1B}
+.chip2 .cname{display:flex;align-items:center;gap:8px;min-width:0;flex:1;background:none;border:0;padding:0;text-align:left}
+.chip2 .cname img{width:30px;height:30px;object-fit:contain;flex:none}
+.chip2 .tx{display:flex;flex-direction:column;min-width:0}
+.chip2 .tx b{font-size:12.5px;font-weight:600;line-height:1.2}
+.chip2 .tx small{font-size:10px;color:#666;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip2 .fl{display:inline-flex;align-items:center;gap:2px}
+.chip2 .tag{border:1px solid var(--brand);background:var(--brand-line);color:#A56B00;border-radius:4px;padding:0 5px;font-size:9.5px;font-weight:600}
+.chip2.done{background:#DDF8E8}
+.chip2.past:not(.done){background:#F4F0E8;color:#6f6a60;box-shadow:0 4px 0 var(--ink)}
+.chip2.past:not(.done) .cname img{opacity:.55;filter:grayscale(.6)}
+.chip2.empty{border-style:dashed;box-shadow:none;background:rgba(255,255,255,.75)}
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tcardx{border:2px solid #1B1B1B;border-radius:14px;box-shadow:0 3px 0 #1B1B1B;background:#fff;padding:8px;display:flex;flex-direction:column;gap:8px;text-align:center;font-family:var(--f-num);font-weight:600;letter-spacing:.03em}
+.tcardx .sw{height:64px;border-radius:9px;display:block}
+.tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (max-width:720px){
+  .scene{padding:14px 12px 104px 12px;border-radius:18px}
+  .fabs{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));top:auto;height:auto;display:flex;justify-content:center;padding-inline:max(10px,env(safe-area-inset-left,0px)) max(10px,env(safe-area-inset-right,0px))}
+  .fabcol{position:static;flex-direction:row;gap:8px;background:rgba(255,255,255,.94);border:2px solid var(--ink);border-radius:20px;padding:8px;box-shadow:0 4px 0 var(--ink)}
+  .fab{width:54px}
+  .nbtn{width:64px;height:64px}
+  .chip2 .cname img{display:none}
+  .stop{min-height:200px}
+}
 @media (max-width:720px){
   .card{padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
   .times{grid-template-columns:1fr}
@@ -226,7 +380,7 @@ const CAT_ORDER=['Grains & starch','Protein','Vegetables','Pantry','Bakery','Oth
 const KEY='whats-eat-v1';
 const clone=o=>JSON.parse(JSON.stringify(o));
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.step)return s}catch(e){}return null}
-let S=load()||{step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null};
+let S=load()||{step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null,game:{eaten:{},badges:{},market:false,shuffles:0}};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let UI={selTypes:[],menu:false,pm:false,err:{}};
 const $=s=>document.querySelector(s);
@@ -259,8 +413,112 @@ function generate(){
 function weekDates(){const n=new Date();const off=(n.getDay()+6)%7;return DAYS.map((_,i)=>{const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-off+i);return d})}
 const mealById=id=>S.meals.find(m=>m.id===id);
 
+/* ---------- gamification ---------- */
+const TICK=`<svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l3 3 5-6"/></svg>`;
+const LEVELS=['Kitchen Rookie','Home Cook','Chop Bar Regular','Market Master','Jollof Royalty','Master Chef'];
+const XP_PER_LEVEL=100;
+const GOAL=6;
+const pad2=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const levelOf=xp=>Math.floor(xp/XP_PER_LEVEL)+1;
+const levelName=l=>LEVELS[Math.min(l-1,LEVELS.length-1)];
+const reduced=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function eatenDates(){const m={};Object.keys(S.game.eaten).forEach(k=>{if(S.game.eaten[k]){const p=k.split('|');(m[p[0]]=m[p[0]]||new Set()).add(p[1])}});return m}
+function eatenCount(){return Object.values(S.game.eaten).filter(Boolean).length}
+function cleanDays(){const act=activeTypes().map(t=>t.id);if(!act.length)return 0;return Object.values(eatenDates()).filter(set=>act.every(id=>set.has(id))).length}
+function streak(){const m=eatenDates();const d=new Date();if(!m[dkey(d)])d.setDate(d.getDate()-1);let n=0;while(m[dkey(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function xpTotal(){return eatenCount()*10+cleanDays()*25+Math.min(S.meals.length,GOAL)*5+(S.plan?20:0)+(S.game.market?5:0)+Object.keys(S.game.chests||{}).length*50}
+const BADGES=[
+ {id:'plan',name:'Plan Maker',desc:'Build your first weekly plan',art:'assets/tomatoes.png',ok:()=>!!S.plan},
+ {id:'bite',name:'First Bite',desc:'Tick off your first meal',art:'assets/coffee.png',ok:()=>eatenCount()>=1},
+ {id:'clean',name:'Clean Plate',desc:'Eat every planned meal in one day',art:'assets/pasta.png',ok:()=>cleanDays()>=1},
+ {id:'s3',name:'On a Roll',desc:'Keep a 3-day streak',art:'assets/cookie.png',ok:()=>streak()>=3},
+ {id:'s7',name:'Week Warrior',desc:'Keep a 7-day streak',art:'assets/salad.png',ok:()=>streak()>=7},
+ {id:'menu',name:'Menu Builder',desc:'Add 10 meals to your menu',art:'assets/toast.png',ok:()=>S.meals.length>=10},
+ {id:'shop',name:'Market Day',desc:'Generate a market list',art:'assets/avocado.png',ok:()=>!!S.game.market},
+ {id:'chest',name:'Treasure Hunter',desc:'Open a weekly reward chest',art:'assets/avocado.png',ok:()=>Object.keys(S.game.chests||{}).length>=1},
+ {id:'dice',name:'Dice Roller',desc:'Shuffle your plan 5 times',art:'assets/tomatoes.png',ok:()=>S.game.shuffles>=5}
+];
+const popQ=[];let popBusy=false;
+function awardBadges(){let any=false;BADGES.forEach(b=>{if(!S.game.badges[b.id]&&b.ok()){S.game.badges[b.id]=Date.now();popQ.push(b);any=true}});if(any){save();confetti(70);runQ()}}
+function runQ(){
+  if(popBusy||!popQ.length)return;popBusy=true;const b=popQ.shift();
+  const el=document.createElement('div');el.className='badgepop';el.setAttribute('role','status');
+  el.innerHTML=`<img src="${b.art}" alt=""><div><small>Badge unlocked</small><b>${esc(b.name)}</b><span>${esc(b.desc)}</span></div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>{el.remove();popBusy=false;runQ()},300)},2800);
+}
+function confetti(n){
+  if(reduced())return;n=n||100;
+  const c=document.createElement('canvas');c.className='confetti';document.body.appendChild(c);
+  const ctx=c.getContext&&c.getContext('2d');if(!ctx){c.remove();return}
+  const dpr=Math.min(2,window.devicePixelRatio||1);const W=c.width=Math.round(innerWidth*dpr),H=c.height=Math.round(innerHeight*dpr);
+  const cols=['#F1AB1A','#D94120','#07B670','#E5399B','#4B5BE0','#F5C518'];
+  const ps=Array.from({length:n},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.38,vx:(Math.random()-.5)*14*dpr,vy:(-Math.random()*13-4)*dpr,w:(6+Math.random()*6)*dpr,h:(4+Math.random()*5)*dpr,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[Math.random()*cols.length|0]}));
+  let t=0;
+  (function f(){t++;ctx.clearRect(0,0,W,H);ps.forEach(p=>{p.vy+=.45*dpr;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});if(t<130)requestAnimationFrame(f);else c.remove()})();
+}
+function xpPop(el,text){
+  if(!el||!el.getBoundingClientRect)return;
+  const r=el.getBoundingClientRect();const e=document.createElement('div');e.className='xppop';e.textContent=text;
+  e.style.left=(r.left+r.width/2)+'px';e.style.top=r.top+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1100);
+}
+function track(fn,el){
+  const l0=levelOf(xpTotal()),x0=xpTotal();fn();const x1=xpTotal();
+  if(el&&x1!==x0)xpPop(el,(x1>x0?'+':'')+(x1-x0)+' XP');
+  if(levelOf(x1)>l0)setTimeout(()=>levelUp(levelOf(x1)),700);
+  awardBadges();
+}
+function levelUp(l){
+  confetti(150);
+  openModal(`<div class="lvl"><img src="assets/tomatoes.png" alt=""><h2>Level ${l}</h2><p>You're now a ${esc(levelName(l))}. Keep eating well to keep climbing.</p><div class="row"><button class="btn pri" data-act="closeModal">Keep going</button></div></div>`);
+}
+function stepper(n){return `<div class="stepper"><span>Step ${n} of 4</span><span class="bars">${[1,2,3,4].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span></div>`}
+function goalHtml(){
+  const n=S.meals.length;const pct=Math.min(100,Math.round(n/GOAL*100));
+  return `<div class="bar"><i style="width:${pct}%"></i></div><div class="gt"><span>${n>=GOAL?'<b>Menu unlocked. Plenty to work with.</b>':n+' of '+GOAL+' meals'}</span><span>${n>=GOAL?'+'+(Math.min(n,GOAL)*5)+' XP earned':'Add '+(GOAL-n)+' more for a varied week'}</span></div>`;
+}
+function coachLine(ts,dk){
+  const st=streak();
+  if(!eatenCount())return {h:'Welcome to your first week!',p:"Tick the circle on today's meals as you eat them to earn XP and build a streak."};
+  const left=ts.filter(t=>!S.game.eaten[dk+'|'+t.id]);
+  if(!left.length)return {h:'Clean plate! You cleared today.',p:st>1?'That is a '+st+'-day streak. Come back tomorrow to keep it going.':'Come back tomorrow to start a streak.'};
+  const now=new Date();const mins=now.getHours()*60+now.getMinutes();
+  const toM=x=>{const q=x.split(':').map(Number);return q[0]*60+q[1]};
+  const next=left.find(t=>toM(t.to)>=mins)||left[0];
+  const id=S.plan&&S.plan[next.id]&&S.plan[next.id][(now.getDay()+6)%7];const m=id&&mealById(id);
+  return {h:'Up next: '+(m?m.name:next.name),p:next.name+' is at '+fmt(next.from)+'. '+(left.length===ts.length?'Eat all '+ts.length+' today for +25 bonus XP.':left.length+' left for a clean plate.')};
+}
+function gamePanel(ts,dates,todayIdx){
+  const xp=xpTotal(),lv=levelOf(xp),into=xp%XP_PER_LEVEL;
+  const next=LEVELS[Math.min(lv,LEVELS.length-1)];
+  const st=streak(),em=eatenDates();
+  const dots=dates.map((d,i)=>`<span class="sd ${em[dkey(d)]?'on':''} ${i===todayIdx?'now':''}" title="${DAYS[i]}">${DAYS[i][0]}</span>`).join('');
+  let planned=0,done=0;
+  ts.forEach(t=>dates.forEach((d,i)=>{if(S.plan&&S.plan[t.id]&&S.plan[t.id][i]){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
+  const pct=planned?done/planned:0,C=2*Math.PI*26;
+  const dk=dkey(dates[todayIdx]);const q=coachLine(ts,dk);
+  const pips=ts.map(t=>`<span class="pip ${S.game.eaten[dk+'|'+t.id]?'on':''}" title="${esc(t.name)}">${ART[t.art]}</span>`).join('');
+  const got=BADGES.filter(b=>S.game.badges[b.id]);
+  const stack=BADGES.slice(0,4).map(b=>`<img class="${S.game.badges[b.id]?'':'lock'}" src="${b.art}" alt="">`).join('');
+  return `<div class="stats">
+   <div class="sc lv"><div style="flex:1;min-width:0"><small>Level ${lv}</small><div class="big">${esc(levelName(lv))}</div><div class="bar"><i style="width:${into}%"></i></div><div class="xt">${into} / ${XP_PER_LEVEL} XP · ${XP_PER_LEVEL-into} to ${esc(next)}</div></div></div>
+   <div class="sc"><div class="flamebig">${ART.flame}</div><div><small>Streak</small><div class="big">${st} ${st===1?'day':'days'}</div><div class="sdots">${dots}</div></div></div>
+   <div class="sc"><div class="ring"><svg viewBox="0 0 62 62" width="62" height="62"><circle cx="31" cy="31" r="26" fill="none" stroke="#F1E3C2" stroke-width="7"/><circle cx="31" cy="31" r="26" fill="none" stroke="#F1AB1A" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct)).toFixed(1)}" transform="rotate(-90 31 31)"/></svg><b>${done}/${planned}</b></div><div><small>This week</small><div class="big">${planned?Math.round(pct*100):0}%</div><div class="xt">of meals eaten</div></div></div>
+  </div>
+  <div class="quest"><img class="mas" src="assets/tomatoes.png" alt=""><div class="txt"><span class="ql">Today's quest</span><b>${esc(q.h)}</b><span class="p">${esc(q.p)}</span><div class="pips">${pips}<span class="xt" style="margin-left:6px">+25 XP for a clean plate</span></div></div><button class="bbtn" data-act="badges"><span class="bstack">${stack}</span>${got.length}/${BADGES.length} badges</button></div>`;
+}
+function spinCells(){
+  const cols=Math.max(1,activeTypes().length);const names=S.meals.map(m=>m.name);if(!names.length)return;
+  [...document.querySelectorAll('.chip2 .cname b[data-final]')].forEach((el,i)=>{
+    const fin=el.dataset.final;const end=450+(i%cols)*180+Math.floor(i/cols)*40;const t0=performance.now();
+    el.classList.add('rolling');
+    (function tick(){if(performance.now()-t0>=end||!document.body.contains(el)){el.textContent=fin;el.classList.remove('rolling');return}el.textContent=names[Math.random()*names.length|0];setTimeout(tick,70)})();
+  });
+}
+
 /* ---------- views ---------- */
-function vSignup(){return `<div>${LOGO}</div>
+function vSignup(){return `<div class="hdr">${LOGO}${stepper(1)}</div>
 <form class="center" id="signup" novalidate>
  <div class="art">${ART.trio}</div>
  <h1>Let's plan your meals for the week</h1>
@@ -284,7 +542,7 @@ function tcard(t){
 function vTimes(){
   const base=PICK_ORDER.map(typeById).filter(Boolean);
   const customs=S.types.filter(t=>t.custom);
-  return `<div>${LOGO}</div>
+  return `<div class="hdr">${LOGO}${stepper(2)}</div>
   <button class="back" data-act="backTo" data-to="signup">‹ Go back</button>
   <div class="center" style="max-width:800px">
    <div class="art">${ART.toast}</div>
@@ -297,12 +555,12 @@ function vTimes(){
 
 function chipsHtml(){
   if(!S.meals.length)return `<span class="empty">Nothing here yet. Meals you add show up here.</span>`;
-  return S.meals.map(m=>`<span class="chip">${dots(m.types)}${esc(m.name)}<button class="x" data-act="rmFood" data-id="${m.id}" aria-label="Remove ${esc(m.name)}">×</button></span>`).join('');
+  return S.meals.map(m=>`<span class="chip ${m.id===UI.lastAdded?'pop':''}">${dots(m.types)}${esc(m.name)}<button class="x" data-act="rmFood" data-id="${m.id}" aria-label="Remove ${esc(m.name)}">×</button></span>`).join('');
 }
 function menuHtml(){
   return `<div class="menu" role="menu">${activeTypes().map(t=>{const sel=UI.selTypes.includes(t.id);return `<button class="${sel?'sel':''}" data-act="pickType" data-id="${t.id}" role="menuitemcheckbox" aria-checked="${sel}">${esc(t.name)}<span class="dot ${sel?'':'ring'}" style="background:${t.color};color:${t.color}"></span></button>`}).join('')}</div>`}
 function typeLabel(){return UI.selTypes.length?`<span class="dots">${dots(UI.selTypes)}</span> ${UI.selTypes.length} selected`:'Select Meal type'}
-function vFoods(){return `<div>${LOGO}</div>
+function vFoods(){return `<div class="hdr">${LOGO}${stepper(3)}</div>
  <button class="back" data-act="backTo" data-to="times">‹ Go back</button>
  <div class="center wide">
   <div class="art">${ART.avocado}</div>
@@ -313,43 +571,123 @@ function vFoods(){return `<div>${LOGO}</div>
    <div style="position:relative"><button class="typebtn" id="typebtn" data-act="typeMenu" aria-haspopup="menu" aria-expanded="${UI.menu}">${typeLabel()} ▾</button><span id="menuslot">${UI.menu?menuHtml():''}</span></div>
    <button class="btn pri" data-act="addFood" style="height:38px">Add</button>
   </div>
+  <div class="goal" id="goal">${goalHtml()}</div>
   <div class="added"><h3>Added Meals <span class="badge" id="cnt">${S.meals.length}</span> <span style="flex:1"></span><button class="linkb" data-act="presets">Add popular picks</button></h3><div class="chips" id="chips">${chipsHtml()}</div></div>
   <div class="actions"><button class="btn pill" data-act="backTo" data-to="times">Cancel</button><button class="btn pri pill" data-act="foodsNext" id="fnext" ${S.meals.length?'':'disabled'}>Next</button></div>
  </div>`}
 
-function cellHtml(t,d,seen){
+const THEMES=[{id:'meadow',name:'Meadow',c:['#E2F6BF','#7CC65A']},{id:'dusk',name:'Dusk',c:['#8062E4','#432A9E']},{id:'sunrise',name:'Sunrise',c:['#FFE9C8','#FF9E73']},{id:'lagoon',name:'Lagoon',c:['#CDF5F8','#3FBCD0']}];
+const THEME_DECOR={meadow:['tree','bush','cloud','flower'],dusk:['mountain','star4','moon','star4'],sunrise:['sun','cloud','bush','cloud'],lagoon:['bubble','cloud','bubble','bubble']};
+const DECOR_W={tree:84,bush:78,cloud:112,flower:34,mountain:132,star4:26,moon:52,sun:82,bubble:34};
+const DECOR={
+ tree:`<svg viewBox="0 0 100 120"><rect x="44" y="70" width="12" height="42" rx="4" fill="var(--d3)"/><circle cx="50" cy="48" r="34" fill="var(--d1)"/><circle cx="34" cy="62" r="22" fill="var(--d2)"/><circle cx="68" cy="60" r="22" fill="var(--d2)"/></svg>`,
+ bush:`<svg viewBox="0 0 100 60"><circle cx="30" cy="38" r="22" fill="var(--d2)"/><circle cx="56" cy="30" r="26" fill="var(--d1)"/><circle cx="76" cy="42" r="18" fill="var(--d2)"/></svg>`,
+ cloud:`<svg viewBox="0 0 120 60"><path d="M20 52a18 18 0 0 1 2-35 24 24 0 0 1 46-3 20 20 0 0 1 32 19 14 14 0 0 1-2 19z" fill="var(--cloud)"/></svg>`,
+ flower:`<svg viewBox="0 0 40 40"><g fill="var(--d1)"><circle cx="20" cy="9" r="6"/><circle cx="31" cy="20" r="6"/><circle cx="20" cy="31" r="6"/><circle cx="9" cy="20" r="6"/></g><circle cx="20" cy="20" r="5" fill="var(--d3)"/></svg>`,
+ star4:`<svg viewBox="0 0 40 40"><path d="M20 2l4.5 13.5L38 20l-13.5 4.5L20 38l-4.5-13.5L2 20l13.5-4.5z" fill="var(--d1)"/></svg>`,
+ mountain:`<svg viewBox="0 0 140 90"><path d="M0 90L45 18l25 34 18-24 52 62z" fill="var(--d2)"/><path d="M45 18l14 19-14-5-12 6z" fill="var(--d1)" opacity=".5"/></svg>`,
+ moon:`<svg viewBox="0 0 60 60"><path d="M40 6a26 26 0 1 0 14 40A22 22 0 0 1 40 6z" fill="var(--d1)"/></svg>`,
+ sun:`<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="20" fill="var(--d1)"/><g stroke="var(--d1)" stroke-width="5" stroke-linecap="round"><path d="M40 6v8M40 66v8M6 40h8M66 40h8M16 16l6 6M58 58l6 6M64 16l-6 6M22 58l-6 6"/></g></svg>`,
+ bubble:`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="var(--d1)" stroke-width="3"/><circle cx="14" cy="14" r="3" fill="var(--d1)"/></svg>`
+};
+const NSTAR=`<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z" fill="#fff" stroke="#1B1B1B" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+const NLOCK=`<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="#fff" stroke="#1B1B1B" stroke-width="1.8"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="#1B1B1B" stroke-width="1.8"/></svg>`;
+const NCHECK=`<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const NDOT=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="#1B1B1B" opacity=".35"/></svg>`;
+const NFLAG=`<svg viewBox="0 0 16 16" width="18" height="18"><rect width="16" height="16" rx="4" fill="#F1AB1A"/><path d="M5 12V4h6l-1.5 2L11 8H6" fill="#fff"/></svg>`;
+const CHEST=`<svg viewBox="0 0 64 56"><rect x="4" y="22" width="56" height="31" rx="5" fill="var(--cf)" stroke="#1B1B1B" stroke-width="3"/><path d="M4 26v-8A14 14 0 0 1 18 4h28a14 14 0 0 1 14 14v8z" fill="var(--cf2)" stroke="#1B1B1B" stroke-width="3" stroke-linejoin="round"/><rect x="25" y="22" width="14" height="16" rx="3" fill="var(--cl)" stroke="#1B1B1B" stroke-width="3"/><circle cx="32" cy="30" r="2.2" fill="#1B1B1B"/></svg>`;
+const FABICON={
+ market:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2.2" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h8"/></svg>`,
+ add:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
+ dice:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="4"/><g fill="#1B1B1B" stroke="none"><circle cx="9" cy="9" r="1.6"/><circle cx="15" cy="15" r="1.6"/><circle cx="15" cy="9" r="1.6"/><circle cx="9" cy="15" r="1.6"/></g></svg>`,
+ trophy:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v6a4 4 0 0 1-8 0zM8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 14v4M8 20h8"/></svg>`,
+ theme:`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2 0-1.4-1-1.6-1-2.8 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.5 17 3 12 3z"/><g fill="#1B1B1B" stroke="none"><circle cx="8" cy="11" r="1.3"/><circle cx="11" cy="7.5" r="1.3"/><circle cx="15.5" cy="8" r="1.3"/></g></svg>`
+};
+function chipHtml(t,d,seen,dk,state,i){
   const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);
-  if(!m)return `<button class="gc ${d===6?'last':''}" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="m add">+ Add a meal</span></button>`;
+  if(!m)return `<div class="chip2 empty ${state}" style="--i:${i}"><button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="tx"><b>+ Add ${esc(t.name.toLowerCase())}</b></span></button></div>`;
+  const k=dk+'|'+t.id;const done=!!S.game.eaten[k];
+  let eat='';
+  if(state==='today'||(state==='past'&&done)){
+    eat=`<button class="eat ${done?'on':''} ${UI.pop===k?'pop':''}" data-act="eat" data-t="${t.id}" data-dk="${dk}" ${state==='past'?'disabled':''} aria-pressed="${done}" aria-label="${done?'Mark as not eaten':'Mark as eaten'}: ${esc(m.name)}">${TICK}</button>`;
+  }
   const cnt=S.plan[t.id].filter(x=>x===id).length;
   const pair=PAIR.find(p=>p[0].test(m.name.toLowerCase()));
   const tag=pair&&!seen.has(id)?`<span class="tag">Try with ${pair[1]}!</span>`:'';
   seen.add(id);
-  return `<button class="gc ${d===6?'last':''}" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal"><span class="m">${esc(m.name)}</span><span class="meta">${tag}${cnt>=2?`<span>${ART.flame}</span>`:''}<span>${ART.repeat} ${cnt}x this week</span></span></button>`}
+  return `<div class="chip2 ${done?'done':''} ${state}" style="--i:${i}">${eat}<button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="${esc(m.name)}, change meal">${ART[t.art]}<span class="tx"><b data-final="${esc(m.name)}">${esc(m.name)}</b><small><span>${esc(t.name)} · ${fmt(t.from)}</span>${cnt>=2?`<span class="fl">${ART.flame} ${cnt}x</span>`:''}${tag}</small></span></button></div>`;
+}
+function stopHtml(d,ts,dates,todayIdx,seenMap,counter){
+  const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
+  const chips=ts.map(t=>chipHtml(t,d,seenMap[t.id],dk,state,counter.i++)).join('');
+  const doneAll=ts.length>0&&ts.every(t=>S.game.eaten[dk+'|'+t.id]);
+  const ncls=state==='future'?'future':state==='today'?(doneAll?'done':'today'):(doneAll?'done':'past');
+  const icon=state==='future'?NLOCK:doneAll?NCHECK:state==='today'?NSTAR:NDOT;
+  const bubble=state==='today'?`<div class="bubble">${NFLAG}<span>${doneAll?'Nice one!':'Eat here!'}</span></div>`:'';
+  return `<section class="stop ${d%2===0?'L':'R'} ${state}" aria-label="${DAYS[d]} ${dates[d].getDate()}"><div class="node">${bubble}<button class="nbtn ${ncls}" data-act="node" data-state="${state}" data-day="${DAYS[d]}" aria-label="${DAYS[d]} ${dates[d].getDate()}">${icon}</button><span class="dlabel">${DAYS[d]} ${dates[d].getDate()}</span></div><div class="chips2">${chips}</div></section>`;
+}
+function weekStats(ts,dates){
+  let planned=0,done=0;
+  ts.forEach(t=>dates.forEach((d,i)=>{if(S.plan&&S.plan[t.id]&&S.plan[t.id][i]){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
+  return {planned,done,need:Math.ceil(planned*0.7)};
+}
+function chestHtml(ts,dates){
+  const w=weekStats(ts,dates);const wk=dkey(dates[0]);
+  const claimed=!!(S.game.chests||{})[wk];const ready=!claimed&&w.planned>0&&w.done>=w.need;
+  const st=claimed?'claimed':ready?'ready':'locked';
+  const label=claimed?'Reward claimed':ready?'Open your chest':w.done+'/'+w.need+' meals to unlock';
+  return `<section class="stop chest"><div class="node cn"><button class="nbtn chestbtn ${st}" data-act="chest" data-state="${st}" data-wk="${wk}" aria-label="Weekly reward chest: ${label}">${CHEST}</button><span class="dlabel">${label}</span></div></section>`;
+}
+function fab(act,label,icon,cls){return `<button class="fab ${cls||''}" data-act="${act}" aria-label="${label}" title="${label}">${FABICON[icon]}<span>${label}</span></button>`}
+function mapHtml(ts,dates,todayIdx){
+  const th=S.theme||'meadow';const seenMap={};ts.forEach(t=>seenMap[t.id]=new Set());const counter={i:0};
+  const stops=DAYS.map((_,d)=>stopHtml(d,ts,dates,todayIdx,seenMap,counter)).join('')+chestHtml(ts,dates);
+  const N=8,kinds=THEME_DECOR[th]||THEME_DECOR.meadow,dec=[];
+  for(let i=0;i<N;i++){[0,1].forEach(side=>{const kind=kinds[(i*2+side)%kinds.length];const top=((i+.12+(side?.42:0)+((i*37+side*11)%10)/55)/N*100).toFixed(1);const edge=1+((i*5+side*3)%9);dec.push(`<span class="dc" style="top:${top}%;${side?'right':'left'}:${edge}%;width:${DECOR_W[kind]}px">${DECOR[kind]}</span>`)})}
+  const fmtD=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  const lv=levelOf(xpTotal());
+  return `<div class="scene" data-theme="${th}">
+   <div class="decor" aria-hidden="true">${dec.join('')}</div>
+   <div class="fabs"><div class="fabcol">${fab('market','Market','market','pri')}${fab('addMealOpen','Add meal','add')}${fab('shuffle','Shuffle','dice')}${fab('badges','Badges','trophy')}${fab('theme','Theme','theme')}</div></div>
+   <div class="hud"><span class="pill">Lv ${lv}</span><span class="pill">Your week · ${fmtD(dates[0])} – ${fmtD(dates[6])}</span><span class="pill">${ART.flame} ${streak()}</span></div>
+   <div class="mapwrap"><svg id="pathsvg" class="pathsvg" aria-hidden="true"></svg>${stops}</div>
+  </div>`;
+}
+let ro=null,pathT=0;
+function drawPath(){
+  const wrap=$('.mapwrap'),svg=$('#pathsvg');if(!wrap||!svg)return;
+  const r=wrap.getBoundingClientRect();if(!r.width)return;
+  const pts=[...wrap.querySelectorAll('.nbtn')].map(b=>{const q=b.getBoundingClientRect();return [q.left-r.left+q.width/2,q.top-r.top+q.height/2]});
+  if(pts.length<2)return;
+  let d='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],my=(a[1]+b[1])/2;d+=' C'+a[0].toFixed(1)+' '+my.toFixed(1)+' '+b[0].toFixed(1)+' '+my.toFixed(1)+' '+b[0].toFixed(1)+' '+b[1].toFixed(1)}
+  svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);svg.setAttribute('width',r.width);svg.setAttribute('height',r.height);
+  svg.innerHTML=`<path d="${d}" fill="none" stroke="var(--path-edge)" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="var(--path)" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="var(--stone)" stroke-width="15" stroke-linecap="round" stroke-dasharray="0.1 40" opacity=".95"/>`;
+}
+function schedulePath(){if(window.cancelAnimationFrame)cancelAnimationFrame(pathT);pathT=window.requestAnimationFrame?requestAnimationFrame(drawPath):0}
+window.addEventListener('resize',schedulePath);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(schedulePath);
 function vPlan(){
   const ts=activeTypes();const dates=weekDates();const todayIdx=(new Date().getDay()+6)%7;
-  const cols=`110px repeat(${ts.length},minmax(210px,1fr))`;
-  const seenMap={};ts.forEach(t=>seenMap[t.id]=new Set());
-  let rows='';
-  DAYS.forEach((dn,d)=>{
-    rows+=`<div class="row ${d===todayIdx?'today':''}" style="display:contents"><div class="gd ${d===6?'last':''}"><b>${dn}</b><span class="num">${dates[d].getDate()}</span></div>${ts.map(t=>cellHtml(t,d,seenMap[t.id])).join('')}</div>`;
-  });
-  const heads=ts.map(t=>`<div class="gh"><div style="width:26px;height:26px">${ART[t.art]}</div><div><div class="n">${esc(t.name)}</div><div class="t">${fmt(t.from)} - ${fmt(t.to)}</div></div></div>`).join('');
   const emptyTypes=ts.filter(t=>!S.meals.some(m=>m.types.includes(t.id)));
   return `<div class="topbar">${LOGO}<div class="tools">
-   <button class="btn pri" data-act="market"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Generate Market List</button>
-   <button class="btn" data-act="addMealOpen">+ Add Meal</button>
-   <button class="btn" data-act="shuffle"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h3c4 0 4 8 8 8h3M1 12h3c1.5 0 2.4-1 3.2-2.2M15 4h-3c-1.3 0-2.2.7-3 1.6M13 2l2 2-2 2M13 10l2 2-2 2"/></svg>Shuffle</button>
    <button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
    <button class="me" data-act="avatarMenu" aria-haspopup="menu"><span class="av">${esc(initials())}</span>${esc(dname())}</button>
    ${UI.pm?`<div class="pm" role="menu"><button data-act="editTimes">Edit meal times</button><button data-act="editMeals">Edit my meals</button><button data-act="signout">Sign out</button></div>`:''}
   </div></div>
-  <div class="scroller"><div class="grid" style="grid-template-columns:${cols}"><div class="gh" style="border-left:0"></div>${heads}${rows}</div></div>
-  <p class="note">${emptyTypes.length?`No meals added for ${emptyTypes.map(t=>esc(t.name)).join(', ')} yet. Use Add Meal to fill ${emptyTypes.length>1?'them':'it'}. `:''}Tap any meal to swap it.</p>`}
+  ${gamePanel(ts,dates,todayIdx)}
+  ${mapHtml(ts,dates,todayIdx)}
+  <p class="note">${emptyTypes.length?`No meals added for ${emptyTypes.map(t=>esc(t.name)).join(', ')} yet. Use Add meal to fill ${emptyTypes.length>1?'them':'it'}. `:''}Tick today's meals as you eat them to earn XP. Tap a meal's name to swap it.</p>`}
 
 /* ---------- render ---------- */
 function render(){
   const app=$('#app');
   app.innerHTML=S.step==='signup'?vSignup():S.step==='times'?vTimes():S.step==='foods'?vFoods():vPlan();
+  const spin=UI.spin;UI.spin=false;UI.reveal=false;UI.pop=null;
+  if(spin&&!reduced())spinCells();
+  schedulePath();
+  const mw=$('.mapwrap');if(ro){ro.disconnect();ro=null}
+  if(mw&&window.ResizeObserver){ro=new ResizeObserver(schedulePath);ro.observe(mw)}
 }
 
 /* ---------- modals ---------- */
@@ -387,16 +725,21 @@ function marketModal(){
 }
 
 /* ---------- actions ---------- */
-function refreshChips(){const c=$('#chips');if(c)c.innerHTML=chipsHtml();const n=$('#cnt');if(n)n.textContent=S.meals.length;const b=$('#fnext');if(b)b.disabled=!S.meals.length}
+function refreshChips(){const c=$('#chips');if(c)c.innerHTML=chipsHtml();UI.lastAdded=null;const n=$('#cnt');if(n)n.textContent=S.meals.length;const b=$('#fnext');if(b)b.disabled=!S.meals.length;const g=$('#goal');if(g)g.innerHTML=goalHtml()}
 function refreshMenu(){const s=$('#menuslot');if(s)s.innerHTML=UI.menu?menuHtml():'';const b=$('#typebtn');if(b){b.innerHTML=typeLabel()+' ▾';b.setAttribute('aria-expanded',UI.menu)}}
 function addFood(){
   const inp=$('#mealin');const name=(inp.value||'').trim();
   if(!name){inp.focus();return}
   if(!UI.selTypes.length){UI.menu=true;refreshMenu();toast('Choose when you eat it');return}
-  const ex=S.meals.find(m=>m.name.toLowerCase()===name.toLowerCase());
-  if(ex){UI.selTypes.forEach(t=>{if(!ex.types.includes(t))ex.types.push(t)})}
-  else S.meals.push({id:uid(),name,types:UI.selTypes.slice()});
-  save();inp.value='';inp.focus();refreshChips();
+  const btn=document.querySelector('[data-act="addFood"]');const before=S.meals.length;
+  track(()=>{
+    const ex=S.meals.find(m=>m.name.toLowerCase()===name.toLowerCase());
+    if(ex){UI.selTypes.forEach(t=>{if(!ex.types.includes(t))ex.types.push(t)})}
+    else{const m={id:uid(),name,types:UI.selTypes.slice()};S.meals.push(m);UI.lastAdded=m.id}
+    save();
+  },btn);
+  inp.value='';inp.focus();refreshChips();
+  if(before<GOAL&&S.meals.length>=GOAL){confetti(80);toast('Menu unlocked!')}
 }
 const A={
  google(){S.user={email:'guest'};S.step='times';save();render();toast('Signed in')},
@@ -408,24 +751,38 @@ const A={
  pickType(el){const id=el.dataset.id;UI.selTypes=UI.selTypes.includes(id)?UI.selTypes.filter(x=>x!==id):UI.selTypes.concat(id);refreshMenu()},
  addFood,
  rmFood(el){S.meals=S.meals.filter(m=>m.id!==el.dataset.id);save();refreshChips()},
- presets(){const act=activeTypes().map(t=>t.id);PRESETS.forEach(([n,ts])=>{const types=ts.filter(t=>act.includes(t));if(!types.length)types.push(act[0]);if(!S.meals.some(m=>m.name.toLowerCase()===n.toLowerCase()))S.meals.push({id:uid(),name:n,types})});save();refreshChips()},
- foodsNext(){if(!S.meals.length)return;generate();S.step='plan';save();render()},
- shuffle(){generate();render();toast('Plan reshuffled')},
+ presets(el){const before=S.meals.length;track(()=>{const act=activeTypes().map(t=>t.id);PRESETS.forEach(([n,ts])=>{const types=ts.filter(t=>act.includes(t));if(!types.length)types.push(act[0]);if(!S.meals.some(m=>m.name.toLowerCase()===n.toLowerCase()))S.meals.push({id:uid(),name:n,types})});save()},el);refreshChips();if(before<GOAL&&S.meals.length>=GOAL)confetti(80)},
+ foodsNext(el){if(!S.meals.length)return;track(()=>{generate();S.step='plan';save()},el);UI.reveal=true;confetti(130);render();toast('Your plan is ready')},
+ shuffle(){track(()=>{generate();S.game.shuffles=(S.game.shuffles||0)+1;save()});UI.reveal=true;UI.spin=true;render()},
  addMealOpen(){addMealModal()},
- saveMeal(){const name=($('#nm2').value||'').trim();const ts=[...document.querySelectorAll('.mt:checked')].map(x=>x.value);if(!name){$('#nm2').focus();return}if(!ts.length){toast('Choose at least one meal time');return}
-  const m={id:uid(),name,types:ts};S.meals.push(m);
-  ts.forEach(t=>{const arr=S.plan[t]||(S.plan[t]=new Array(7).fill(null));const empties=arr.map((v,i)=>v?-1:i).filter(i=>i>=0);const d=empties.length?empties[0]:Math.floor(Math.random()*7);arr[d]=m.id});
-  save();closeModal();render();toast(name+' added')},
+ saveMeal(el){const name=($('#nm2').value||'').trim();const ts=[...document.querySelectorAll('.mt:checked')].map(x=>x.value);if(!name){$('#nm2').focus();return}if(!ts.length){toast('Choose at least one meal time');return}
+  track(()=>{const m={id:uid(),name,types:ts};S.meals.push(m);
+   ts.forEach(t=>{const arr=S.plan[t]||(S.plan[t]=new Array(7).fill(null));const empties=arr.map((v,i)=>v?-1:i).filter(i=>i>=0);const d=empties.length?empties[0]:Math.floor(Math.random()*7);arr[d]=m.id});
+   save()},el);
+  closeModal();render();toast(name+' added')},
  swap(el){swapModal(el.dataset.t,+el.dataset.d)},
  setMeal(el){S.plan[el.dataset.t][+el.dataset.d]=el.dataset.m;save();closeModal();render()},
- market(){marketModal()},
+ market(){track(()=>{S.game.market=true;save()});marketModal()},
  copyList(){const t=window.__list||'';try{navigator.clipboard.writeText(t).then(()=>toast('List copied'),()=>toast('Select the list to copy'))}catch(e){toast('Select the list to copy')}},
  closeModal,
+ node(el){const st=el.dataset.state;if(st==='future')toast(el.dataset.day+" unlocks later this week");else if(st==='today')toast("Tick your meals as you eat them");else toast("Nice work, keep it going")},
+ chest(el){const st=el.dataset.state;if(st==='locked'){toast("Eat more of your planned meals to unlock it");return}if(st==='claimed'){toast("You already opened this week's chest");return}
+  track(()=>{S.game.chests=S.game.chests||{};S.game.chests[el.dataset.wk]=true;save()},el);confetti(170);render();toast('Chest opened! +50 XP')},
+ theme(){openModal(`<h2>Choose a theme</h2><p>Pick the world your week lives in.</p><div class="tgrid">${THEMES.map(t=>`<button class="tcardx ${(S.theme||'meadow')===t.id?'cur':''}" data-act="setTheme" data-id="${t.id}"><span class="sw" style="background:linear-gradient(180deg,${t.c[0]},${t.c[1]})"></span>${t.name}</button>`).join('')}</div><div class="row"><button class="btn pri" data-act="closeModal">Done</button></div>`)},
+ setTheme(el){S.theme=el.dataset.id;save();closeModal();render()},
+ eat(el){
+  const t=el.dataset.t,dk=el.dataset.dk;const k=dk+'|'+t;const was=!!S.game.eaten[k];const cd0=cleanDays();
+  track(()=>{if(was)delete S.game.eaten[k];else S.game.eaten[k]=true;save()},el);
+  if(!was&&cleanDays()>cd0){confetti(120);toast('Clean plate! +25 XP bonus')}
+  UI.pop=was?null:k;render()},
+ badges(){
+  const got=BADGES.filter(b=>S.game.badges[b.id]).length;
+  openModal(`<h2>Badges</h2><p>${got} of ${BADGES.length} unlocked.</p><div class="bgrid">${BADGES.map(b=>{const on=!!S.game.badges[b.id];return `<div class="bcard ${on?'':'lock'}"><img src="${b.art}" alt=""><b>${esc(b.name)}</b><span>${esc(b.desc)}</span></div>`}).join('')}</div><div class="row"><button class="btn pri" data-act="closeModal">Close</button></div>`)},
  bell(){toast('No new notifications')},
  avatarMenu(){UI.pm=!UI.pm;render()},
  editTimes(){UI.pm=false;S.step='times';save();render()},
  editMeals(){UI.pm=false;S.step='foods';UI.selTypes=[];save();render()},
- signout(){UI.pm=false;try{localStorage.removeItem(KEY)}catch(e){}S={step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null};UI={selTypes:[],menu:false,pm:false,err:{}};render()}
+ signout(){UI.pm=false;try{localStorage.removeItem(KEY)}catch(e){}S={step:'signup',user:null,types:clone(DEFAULT_TYPES),meals:[],plan:null,game:{eaten:{},badges:{},market:false,shuffles:0}};UI={selTypes:[],menu:false,pm:false,err:{}};render()}
 };
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-act]');
@@ -451,6 +808,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='meali
 
 /* validate saved state, then draw */
 (function init(){
+  S.game=S.game||{eaten:{},badges:{},market:false,shuffles:0};
+  S.game.chests=S.game.chests||{};
+  if(S.step==='plan')UI.reveal=true;
   if(S.step==='plan'&&(!S.plan||!S.meals.length)){S.step=S.meals.length?'plan':'times'}
   if(S.step==='plan'&&!S.plan)generate();
   render();
