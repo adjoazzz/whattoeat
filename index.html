@@ -297,6 +297,14 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .crit.greet i{animation:wave .5s ease-in-out infinite!important}
 .crit.greet .w{animation-duration:.14s}
 .critters.up{z-index:6}
+.crit{--lx:9px;--lr:7deg}
+.crit.rtl{--lx:-9px;--lr:-7deg}
+.crit.kiss i{animation:lean .7s ease-in-out infinite!important}
+.crit.kiss .w{animation-duration:.2s}
+.heart.big svg{width:34px;height:31px}
+.heart.sm{animation-delay:.35s;opacity:0}
+.heart.sm svg{width:18px;height:17px}
+@keyframes lean{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(var(--lx)) rotate(var(--lr))}}
 .heart{position:absolute;pointer-events:none;animation:heartup 2.2s ease-out forwards}
 @keyframes wave{0%,100%{transform:rotate(-10deg) translateY(0)}50%{transform:rotate(10deg) translateY(-7px)}}
 @keyframes heartup{0%{opacity:0;transform:translateY(8px) scale(.4)}20%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-34px) scale(1)}}
@@ -772,15 +780,15 @@ const CR={
  turtle:()=>`<svg viewBox="0 0 48 32"><ellipse cx="14" cy="27" rx="5" ry="3" fill="#8EDB8A" ${CS}/><ellipse cx="30" cy="27" rx="5" ry="3" fill="#8EDB8A" ${CS}/><path d="M7 24a16 14 0 0 1 32 0z" fill="#58C46A" ${CS}/><path d="M16 24c0-6 3-10 7-13M26 24c0-6-1-9-3-13" fill="none" ${CS} opacity=".55"/><circle cx="42" cy="19" r="5" fill="#8EDB8A" ${CS}/><circle cx="43.5" cy="18" r="1.2" fill="#1B1B1B"/></svg>`
 };
 const CRIT={
- meadow:[{cls:'fly',w:56,d:[14,22],svg:()=>CR.bird('#F25C54')},{cls:'fly',w:44,d:[18,28],svg:()=>CR.bfly('#FFB000')},{cls:'hop',w:62,d:[20,30],svg:()=>CR.rabbit('#fff')}],
- dusk:[{cls:'fly',w:60,d:[12,20],svg:CR.bat},{cls:'fly',w:38,d:[20,30],svg:CR.firefly},{cls:'fly',w:56,d:[16,26],svg:CR.owl}],
- sunrise:[{cls:'fly',w:56,d:[14,22],svg:()=>CR.bird('#FFB000')},{cls:'fly',w:44,d:[18,28],svg:()=>CR.bfly('#F2704F')},{cls:'hop',w:62,d:[20,30],svg:()=>CR.rabbit('#F2A25C')}],
- lagoon:[{cls:'swim',w:60,d:[14,22],svg:()=>CR.fish('#FF9E4A')},{cls:'swim',w:52,d:[16,26],svg:()=>CR.fish('#7B6BE8')},{cls:'swim',w:44,d:[22,32],svg:CR.jelly},{cls:'swim',w:72,d:[26,36],svg:CR.turtle}]
+ meadow:[{cls:'fly',w:56,d:[14,22],sp:'bird',svg:()=>CR.bird('#F25C54')},{cls:'fly',w:44,d:[18,28],sp:'bfly',svg:()=>CR.bfly('#FFB000')},{cls:'hop',w:62,d:[20,30],sp:'rabbit',svg:()=>CR.rabbit('#fff')}],
+ dusk:[{cls:'fly',w:60,d:[12,20],sp:'bat',svg:CR.bat},{cls:'fly',w:38,d:[20,30],sp:'firefly',svg:CR.firefly},{cls:'fly',w:56,d:[16,26],sp:'owl',svg:CR.owl}],
+ sunrise:[{cls:'fly',w:56,d:[14,22],sp:'bird',svg:()=>CR.bird('#FFB000')},{cls:'fly',w:44,d:[18,28],sp:'bfly',svg:()=>CR.bfly('#F2704F')},{cls:'hop',w:62,d:[20,30],sp:'rabbit',svg:()=>CR.rabbit('#F2A25C')}],
+ lagoon:[{cls:'swim',w:60,d:[14,22],sp:'fish',svg:()=>CR.fish('#FF9E4A')},{cls:'swim',w:52,d:[16,26],sp:'fish',svg:()=>CR.fish('#7B6BE8')},{cls:'swim',w:44,d:[22,32],sp:'jelly',svg:CR.jelly},{cls:'swim',w:72,d:[26,36],sp:'turtle',svg:CR.turtle}]
 };
 function mkCritter(L,k,rtl,top,dur){
   const el=document.createElement('div');el.className='crit '+k.cls+(rtl?' rtl':'');
   el.style.top=top.toFixed(0)+'px';el.style.width=k.w+'px';el.style.setProperty('--dur',dur.toFixed(1)+'s');
-  el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';el._rtl=rtl;
+  el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';el._rtl=rtl;el._sp=k.sp;
   el.addEventListener('animationend',e=>{if(e.target===el)el.remove()});L.appendChild(el);return el;
 }
 function spawnCritter(){
@@ -793,19 +801,21 @@ function spawnCritter(){
   const dur=(k.d[0]+Math.random()*(k.d[1]-k.d[0]))/1.7;
   mkCritter(L,k,rtl,top,dur);
   if(Math.random()<.6&&L.children.length<4){
-    const k2=pickOne(list);
+    const same=Math.random()<.5;const k2=same?pickOne(list.filter(x=>x.sp===k.sp)):pickOne(list);
     mkCritter(L,k2,!rtl,top+(Math.random()*40-10),dur);
   }
 }
 const HEART='<svg viewBox="0 0 24 22" width="24" height="22"><path d="M12 21C5 15 1 11.500 1 7a5.500 5.500 0 0 1 11-1.500A5.500 5.500 0 0 1 23 7c0 4.500-4 8-11 14z" fill="#FF4D79" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></svg>';
 function greet(a,b){
   a._met=b._met=true;
-  [a,b].forEach(e=>{e.style.animationPlayState='paused';e.classList.add('greet')});
+  const kiss=a._sp&&a._sp===b._sp;
+  [a,b].forEach(e=>{e.style.animationPlayState='paused';e.classList.add(kiss?'kiss':'greet')});
   const L=$('.critters');if(!L)return;L.classList.add('up');const lr=L.getBoundingClientRect(),ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
   const h=document.createElement('div');h.className='heart';h.setAttribute('aria-hidden','true');
   h.style.left=(((ra.left+ra.right+rb.left+rb.right)/4)-lr.left-12).toFixed(0)+'px';
   h.style.top=(Math.min(ra.top,rb.top)-lr.top-10).toFixed(0)+'px';h.innerHTML=HEART;L.appendChild(h);
-  setTimeout(()=>{[a,b].forEach(e=>{e.style.animationPlayState='';e.classList.remove('greet')});h.remove();if(!document.querySelector('.crit.greet'))L.classList.remove('up')},2200);
+  let h2=null;if(kiss){h.classList.add('big');h2=document.createElement('div');h2.className='heart sm';h2.setAttribute('aria-hidden','true');h2.style.left=(parseFloat(h.style.left)+26)+'px';h2.style.top=(parseFloat(h.style.top)+8)+'px';h2.innerHTML=HEART;L.appendChild(h2)}
+  setTimeout(()=>{[a,b].forEach(e=>{e.style.animationPlayState='';e.classList.remove('greet','kiss')});h.remove();h2&&h2.remove();if(!document.querySelector('.crit.greet,.crit.kiss'))L.classList.remove('up')},kiss?2800:2200);
 }
 setInterval(()=>{
   const cs=[...document.querySelectorAll('.critters .crit')].filter(e=>!e._met);
@@ -820,6 +830,14 @@ setInterval(()=>{
 FABICON.wheel=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>`;
 FABICON.gift=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19v-3.5h-19zM12 5.5V20M12 5.5C10 2 6 2.5 7 5c.4 1 3 .5 5 .5zM12 5.5c2-3.500 6-3 5-.5-.4 1-3 .5-5 .5z"/></svg>`;
 
+const WPH=[
+ n=>`It's ${n} for you!<small>No arguments. The wheel decided.</small>`,
+ n=>`${n} wins!<small>Your stomach already knew.</small>`,
+ n=>`Go get some ${n}!<small>The wheel has good taste.</small>`,
+ n=>`Today's pick: ${n}<small>Decision made. Now go eat.</small>`,
+ n=>`${n}, here we come!<small>The wheel never lies.</small>`,
+ n=>`Say hello to ${n}!<small>Great choice by the wheel.</small>`
+];
 function wheelSvg(items){
   const n=items.length,R=140,C=150,cols=['#FF7AC6','#FFC933','#4B5BE0','#34C77B','#FF8A4C','#8E5CF7'],tc=['#1B1B1B','#1B1B1B','#fff','#1B1B1B','#1B1B1B','#fff'];
   if(n<2)return `<svg viewBox="0 0 300 300" role="img" aria-label="Empty wheel"><circle cx="150" cy="150" r="140" fill="#F1F1F1" stroke="#1B1B1B" stroke-width="4"/><text x="150" y="150" text-anchor="middle" dominant-baseline="middle" font-family="Oswald,sans-serif" font-size="15" fill="#6a6a6a">${n?'Add one more meal':'Add your meals'}</text></svg>`;
@@ -1043,7 +1061,7 @@ const A={
   const cur=UI.wrot||0;const tgt=360*(Math.ceil(cur/360)+5)-(i+.5)*seg+(Math.random()-.5)*seg*.6;UI.wrot=tgt;
   const sv=$('#wheelsvg'),res=$('#wres');if(res)res.textContent='Spinning...';
   document.querySelectorAll('[data-act^="wheel"]').forEach(b=>b.disabled=true);
-  const fin=()=>{UI.spinning=false;const r=$('#wres');if(!r)return;r.innerHTML=`Eat <b>${esc(w[i])}</b>!<small>The wheel has spoken.</small>`;document.querySelectorAll('[data-act^="wheel"]').forEach(b=>b.disabled=false);confetti(80)};
+  const fin=()=>{UI.spinning=false;const r=$('#wres');if(!r)return;let k;do{k=Math.floor(Math.random()*WPH.length)}while(k===UI.lastPh&&WPH.length>1);UI.lastPh=k;const nm=`<b>${esc(w[i])}</b>`;r.innerHTML=WPH[k](nm);document.querySelectorAll('[data-act^="wheel"]').forEach(b=>b.disabled=false);confetti(80)};
   if(sv){if(reduced()){sv.style.transition='none';sv.style.transform='rotate('+tgt+'deg)';fin()}else{sv.style.transform='rotate('+tgt+'deg)';setTimeout(fin,4300)}}else fin();
  },
  surprise(el){UI.sur=null;if(!doSurprise())return;render();surpriseModal()},
