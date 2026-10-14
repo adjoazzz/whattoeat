@@ -294,6 +294,10 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .tcardx .sw{height:64px;border-radius:9px;display:block}
 .tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.chip2.skip{background:rgba(255,255,255,.88);color:#6a6a6a}
+.chip2.skip b{font-weight:500}
+.gc.skip .m{color:#9a9a9a;font-weight:500}
+.opt.none{border-style:dashed}
 .ptools{display:flex;flex-wrap:wrap;gap:10px;margin:-8px 0 20px}
 .ptools .btn{height:34px;font-size:12px;padding:0 14px;border-radius:7px;white-space:nowrap}
 .plist{display:none}
@@ -484,10 +488,14 @@ function generate(){
     }}
     plan[t.id]=out.length?out:new Array(7).fill(null);
   });
+  const old=S.plan;if(old)Object.keys(plan).forEach(t=>{if(old[t])old[t].forEach((v,d)=>{if(v===NONE)plan[t][d]=NONE})});
   S.plan=plan;save();
 }
 function weekDates(){const n=new Date();const off=(n.getDay()+6)%7;return DAYS.map((_,i)=>{const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-off+i);return d})}
 const mealById=id=>S.meals.find(m=>m.id===id);
+const NONE='none';
+function hasMeal(t,i){const v=S.plan&&S.plan[t]&&S.plan[t][i];return !!v&&v!==NONE}
+function skippedOn(dk,t){if(!S.plan||!S.plan[t])return false;const i=weekDates().findIndex(d=>dkey(d)===dk);return i>=0&&S.plan[t][i]===NONE}
 
 /* ---------- gamification ---------- */
 const TICK=`<svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l3 3 5-6"/></svg>`;
@@ -501,7 +509,7 @@ const levelName=l=>LEVELS[Math.min(l-1,LEVELS.length-1)];
 const reduced=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function eatenDates(){const m={};Object.keys(S.game.eaten).forEach(k=>{if(S.game.eaten[k]){const p=k.split('|');(m[p[0]]=m[p[0]]||new Set()).add(p[1])}});return m}
 function eatenCount(){return Object.values(S.game.eaten).filter(Boolean).length}
-function cleanDays(){const act=activeTypes().map(t=>t.id);if(!act.length)return 0;return Object.values(eatenDates()).filter(set=>act.every(id=>set.has(id))).length}
+function cleanDays(){const act=activeTypes().map(t=>t.id);if(!act.length)return 0;return Object.entries(eatenDates()).filter(([dk,set])=>act.every(id=>set.has(id)||skippedOn(dk,id))).length}
 function streak(){const m=eatenDates();const d=new Date();if(!m[dkey(d)])d.setDate(d.getDate()-1);let n=0;while(m[dkey(d)]){n++;d.setDate(d.getDate()-1)}return n}
 function xpTotal(){return eatenCount()*10+cleanDays()*25+Math.min(S.meals.length,GOAL)*5+(S.plan?20:0)+(S.game.market?5:0)+Object.keys(S.game.chests||{}).length*50+Math.min(S.meals.filter(m=>m.surprise).length,10)*5}
 const BADGES=[
@@ -558,7 +566,7 @@ function goalHtml(){
 function coachLine(ts,dk){
   const st=streak();
   if(!eatenCount())return {h:'Welcome to your first week!',p:"Tick the circle on today's meals as you eat them to earn XP and build a streak."};
-  const left=ts.filter(t=>!S.game.eaten[dk+'|'+t.id]);
+  const left=ts.filter(t=>!S.game.eaten[dk+'|'+t.id]&&!skippedOn(dk,t.id));
   if(!left.length)return {h:'Clean plate! You cleared today.',p:st>1?'That is a '+st+'-day streak. Come back tomorrow to keep it going.':'Come back tomorrow to start a streak.'};
   const now=new Date();const mins=now.getHours()*60+now.getMinutes();
   const toM=x=>{const q=x.split(':').map(Number);return q[0]*60+q[1]};
@@ -572,7 +580,7 @@ function gamePanel(ts,dates,todayIdx){
   const st=streak(),em=eatenDates();
   const dots=dates.map((d,i)=>`<span class="sd ${em[dkey(d)]?'on':''} ${i===todayIdx?'now':''}" title="${DAYS[i]}">${DAYS[i][0]}</span>`).join('');
   let planned=0,done=0;
-  ts.forEach(t=>dates.forEach((d,i)=>{if(S.plan&&S.plan[t.id]&&S.plan[t.id][i]){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
+  ts.forEach(t=>dates.forEach((d,i)=>{if(hasMeal(t.id,i)){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
   const pct=planned?done/planned:0,C=2*Math.PI*26;
   const dk=dkey(dates[todayIdx]);const q=coachLine(ts,dk);
   const pips=ts.map(t=>`<span class="pip ${S.game.eaten[dk+'|'+t.id]?'on':''}" title="${esc(t.name)}">${ART[t.art]}</span>`).join('');
@@ -716,10 +724,10 @@ function doSurprise(){
   const ids=act.map(t=>t.id),dates=weekDates(),todayIdx=(new Date().getDay()+6)%7;
   const x=pickOne(pool);
   let tt=x.types.filter(i=>ids.includes(i));if(!tt.length)tt=ids;
-  const cells=ty=>{const o=[];for(let d=todayIdx;d<7;d++)if(!S.game.eaten[dkey(dates[d])+'|'+ty])o.push([ty,d]);return o};
+  const cells=ty=>{const o=[];for(let d=todayIdx;d<7;d++)if(!S.game.eaten[dkey(dates[d])+'|'+ty]&&!(S.plan[ty]&&S.plan[ty][d]===NONE))o.push([ty,d]);return o};
   let c=[];tt.forEach(ty=>c=c.concat(cells(ty)));
   if(!c.length)ids.forEach(ty=>c=c.concat(cells(ty)));
-  if(!c.length){toast('This week is all eaten. Nothing left to surprise!');return false}
+  if(!c.length){toast('No free slots left this week');return false}
   const [ty,d]=pickOne(c);
   const arr=S.plan[ty]||(S.plan[ty]=new Array(7).fill(null));
   const m={id:uid(),name:x.name,types:[ty],recipe:x.url,surprise:true};
@@ -801,6 +809,7 @@ function wheelRefresh(focus){const b=$('#wbody');if(!b)return;b.innerHTML=wheelB
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='wnm'){e.preventDefault();A.wheelAdd()}});
 function chipHtml(t,d,seen,dk,state,i){
   const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);
+  if(id===NONE)return `<div class="chip2 empty skip ${state}" style="--i:${i}"><button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="No ${esc(t.name.toLowerCase())}, change"><span class="tx"><b>No ${esc(t.name.toLowerCase())}</b><small>Skipping this one</small></span></button></div>`;
   if(!m)return `<div class="chip2 empty ${state}" style="--i:${i}"><button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="tx"><b>+ Add ${esc(t.name.toLowerCase())}</b></span></button></div>`;
   const k=dk+'|'+t.id;const done=!!S.game.eaten[k];
   let eat='';
@@ -817,7 +826,7 @@ function chipHtml(t,d,seen,dk,state,i){
 function stopHtml(d,ts,dates,todayIdx,seenMap,counter){
   const state=d<todayIdx?'past':d===todayIdx?'today':'future';const dk=dkey(dates[d]);
   const chips=ts.map(t=>chipHtml(t,d,seenMap[t.id],dk,state,counter.i++)).join('');
-  const doneAll=ts.length>0&&ts.every(t=>S.game.eaten[dk+'|'+t.id]);
+  const doneAll=ts.length>0&&ts.some(t=>S.game.eaten[dk+'|'+t.id])&&ts.every(t=>S.game.eaten[dk+'|'+t.id]||S.plan[t.id]&&S.plan[t.id][d]===NONE);
   const ncls=state==='future'?'future':state==='today'?(doneAll?'done':'today'):(doneAll?'done':'past');
   const icon=state==='future'?NLOCK:doneAll?NCHECK:state==='today'?NSTAR:NDOT;
   const bubble=state==='today'?`<div class="bubble">${NFLAG}<span>${doneAll?'Nice one!':'Eat here!'}</span></div>`:'';
@@ -825,7 +834,7 @@ function stopHtml(d,ts,dates,todayIdx,seenMap,counter){
 }
 function weekStats(ts,dates){
   let planned=0,done=0;
-  ts.forEach(t=>dates.forEach((d,i)=>{if(S.plan&&S.plan[t.id]&&S.plan[t.id][i]){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
+  ts.forEach(t=>dates.forEach((d,i)=>{if(hasMeal(t.id,i)){planned++;if(S.game.eaten[dkey(d)+'|'+t.id])done++}}));
   return {planned,done,need:Math.ceil(planned*0.7)};
 }
 function chestHtml(ts,dates){
@@ -868,6 +877,7 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(schedulePath);
 
 function plainCell(t,d,seen,state,dk){
   const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);const last=d===6?'last':'';
+  if(id===NONE)return `<div class="gc skip ${last}"><button class="gcm" data-act="swap" data-t="${t.id}" data-d="${d}" aria-label="No meal, change"><span class="m add">No meal</span><span class="meta">Skipping this one</span></button></div>`;
   if(!m)return `<div class="gc ${last}"><button class="gcm" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="m add">+ Add a meal</span></button></div>`;
   const k=dk+'|'+t.id;const done=!!S.game.eaten[k];
   const eat=(state==='today'||(state==='past'&&done))?`<span class="eatw"><button class="eat ${done?'on':''} ${UI.pop===k?'pop':''}" data-act="eat" data-t="${t.id}" data-dk="${dk}" ${state==='past'?'disabled':''} aria-pressed="${done}" aria-label="${done?'Mark as not eaten':'Mark as eaten'}: ${esc(m.name)}">${TICK}</button></span>`:'';
@@ -930,6 +940,7 @@ function swapModal(tid,d){
   const pool=S.meals.filter(m=>m.types.includes(tid));
   openModal(`<h2>${esc(t.name)} · ${DAYS[d]}</h2><p>Pick what you'd like to eat.</p>
   ${pool.length?pool.map(m=>`<button class="opt ${m.id===cur?'cur':''}" data-act="setMeal" data-t="${tid}" data-d="${d}" data-m="${m.id}">${esc(m.name)}${m.id===cur?'<small>Current</small>':''}</button>`).join(''):`<p>You haven't added any ${esc(t.name.toLowerCase())} meals yet.</p>`}
+  <button class="opt none ${cur===NONE?'cur':''}" data-act="setNone" data-t="${tid}" data-d="${d}">No meal. I don't eat then.${cur===NONE?'<small>Current</small>':''}</button>
   <div class="row"><button class="btn" data-act="addMealOpen">+ New meal</button><button class="btn pri" data-act="closeModal">Done</button></div>`);
 }
 function marketModal(){
@@ -984,6 +995,7 @@ const A={
    save()},el);
   closeModal();render();toast(name+' added')},
  swap(el){swapModal(el.dataset.t,+el.dataset.d)},
+ setNone(el){const t=el.dataset.t,d=+el.dataset.d;S.plan[t][d]=NONE;save();closeModal();render();toast('No '+typeById(t).name.toLowerCase()+' on '+DAYS[d])},
  setMeal(el){S.plan[el.dataset.t][+el.dataset.d]=el.dataset.m;save();closeModal();render()},
  wheel(){UI.wrot=0;UI.spinning=false;S.wheel=S.wheel||[];openModal(`<h2>Spin the wheel</h2><p>Add what you're torn between and let the wheel pick.</p><div id="wbody">${wheelBody()}</div><div class="row"><button class="btn" data-act="closeModal">Close</button></div>`)},
  wheelAdd(){const i=$('#wnm');if(!i)return;const v=(i.value||'').trim();if(!v){i.focus();return}const w=S.wheel=S.wheel||[];if(w.length>=12){toast('The wheel holds up to 12 meals');return}if(w.some(x=>x.toLowerCase()===v.toLowerCase())){toast('Already on the wheel');i.select();return}w.push(v);UI.wrot=0;save();wheelRefresh(true)},
