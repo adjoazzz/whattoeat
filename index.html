@@ -245,7 +245,7 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .pill{background:#fff;color:#1B1B1B;border:2px solid var(--ink);border-radius:999px;box-shadow:0 3px 0 var(--ink);padding:5px 14px;font-family:var(--f-num);font-weight:600;font-size:14px;letter-spacing:.03em;display:inline-flex;align-items:center;gap:7px}
 .fabs{position:sticky;top:calc(14px + env(safe-area-inset-top,0px));height:0;z-index:20}
 .fabcol{position:absolute;right:-72px;top:0;display:flex;flex-direction:column;gap:10px}
-.fab{width:58px;border:2px solid var(--ink);background:#fff;color:#1B1B1B;border-radius:16px;box-shadow:0 4px 0 var(--ink);padding:7px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-num);font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.fab{width:58px;border:2px solid var(--ink);background:#fff;color:#1B1B1B;border-radius:16px;box-shadow:0 4px 0 var(--ink);padding:7px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--f-num);font-size:9.5px;letter-spacing:0;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 .fab svg{width:22px;height:22px}
 .fab.pri{background:var(--brand)}
 .fab:active,.nbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
@@ -290,19 +290,34 @@ h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-we
 .tcardx .sw{height:64px;border-radius:9px;display:block}
 .tcardx.cur{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.sbox{position:relative;overflow:hidden;border:2px solid #1B1B1B;border-radius:18px;box-shadow:0 5px 0 #1B1B1B;padding:30px 14px 26px;margin:8px 0 18px;background:radial-gradient(circle at 18% 20%,rgba(255,255,255,.6),transparent 42%),radial-gradient(circle at 85% 90%,rgba(255,255,255,.35),transparent 40%),linear-gradient(135deg,var(--c,#F5C518),color-mix(in srgb,var(--c,#F5C518) 55%,#8B5CF6))}
+.sbox::before,.sbox::after{content:"";position:absolute;width:22px;height:22px;background:#fff;opacity:.9;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.sbox::before{left:16px;top:14px}
+.sbox::after{right:18px;bottom:14px;width:30px;height:30px}
+.sbox b{position:relative;display:inline-block;max-width:100%;font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:22px;line-height:1.2;min-height:29px;background:#fff;color:#1B1B1B;border:2px solid #1B1B1B;border-radius:12px;padding:6px 16px;box-shadow:0 4px 0 #1B1B1B;transform:rotate(-1.5deg)}
+.sbox .slot{display:table;margin:16px auto 0;font-family:var(--f-num);letter-spacing:.05em;font-size:13px;font-weight:600;background:#1B1B1B;color:#fff;border-radius:999px;padding:3px 14px}
+.dlg .row.brow{display:flex;gap:10px;justify-content:stretch;margin-top:0}
+.brow .btn{flex:1;min-width:0;height:42px;padding:0 6px;white-space:nowrap}
+.wheelwrap{position:relative;width:min(300px,100%);margin:8px auto 10px}
+.wheelwrap svg{display:block;width:100%;height:auto;transition:transform 4.2s cubic-bezier(.12,.7,.12,1)}
+.wptr{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:22px solid #1B1B1B;z-index:2;filter:drop-shadow(0 2px 0 rgba(255,255,255,.9))}
+.wres{text-align:center;min-height:30px;font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:19px;font-weight:600;margin-bottom:12px}
+.wres small{display:block;font-family:var(--f-body);font-size:12.5px;font-weight:400;color:#6a6a6a}
+.wadd{display:flex;gap:8px;margin-bottom:10px}
+.wadd .inp{flex:1;min-width:0}
+.wadd .btn{height:auto}
+.wchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;min-height:8px}
+.dlg .row.wrow{display:flex;gap:10px;justify-content:stretch;margin-top:0}
+.wrow .btn{flex:1;min-width:0;height:42px;padding:0 6px;white-space:nowrap}
+
 a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .chip2 .rlink{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:var(--brand-line);color:#1B1B1B;display:grid;place-items:center;font-size:13px;font-weight:700;text-decoration:none;line-height:1}
 .chip2 .rlink:hover{background:var(--brand)}
 .chip2 .tag.sp{background:#FFE3F3;border-color:#E5399B;color:#B01A74}
 .sur{text-align:center}
 .sur h2{font-size:22px}
-.sbox{border:2px solid #1B1B1B;border-radius:16px;box-shadow:0 4px 0 #1B1B1B;background:var(--brand-tint);padding:16px 12px;margin:6px 0 12px}
-.sbox img{width:72px;height:64px;object-fit:contain;display:block;margin:0 auto 6px}
-.sbox b{display:block;font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-size:20px;line-height:1.2;min-height:25px}
-.sbox .slot{display:inline-block;margin-top:8px;font-family:var(--f-num);letter-spacing:.04em;font-size:13px;font-weight:600;background:#fff;border:2px solid #1B1B1B;border-radius:10px;padding:1px 10px;box-shadow:0 3px 0 #1B1B1B}
 .sreveal{transition:opacity .3s,transform .3s}
 .sreveal.hide{opacity:0;transform:translateY(6px);pointer-events:none}
-.sur .linkrow{display:flex;justify-content:center;margin-bottom:2px}
 .critters{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
 .crit{position:absolute;left:0;animation:cross var(--dur,18s) linear forwards}
 .crit i{display:block;width:100%}
@@ -324,8 +339,8 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;text-decorat
   .scene{padding:14px 12px 104px 12px;border-radius:18px}
   .fabs{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));top:auto;height:auto;display:flex;justify-content:center;padding-inline:max(10px,env(safe-area-inset-left,0px)) max(10px,env(safe-area-inset-right,0px))}
   .fabcol{position:static;flex-direction:row;gap:5px;background:rgba(255,255,255,.94);border:2px solid var(--ink);border-radius:20px;padding:8px;box-shadow:0 4px 0 var(--ink)}
-  .fab{width:49px;font-size:8.5px;letter-spacing:0}
-  .fab svg{width:20px;height:20px}
+  .fab{width:43px;font-size:8px;letter-spacing:0;padding:6px 0 4px}
+  .fab svg{width:19px;height:19px}
   .nbtn{width:64px;height:64px}
   .chip2 .cname img{display:none}
   .stop{min-height:200px}
@@ -686,10 +701,9 @@ function surpriseModal(){
   const u=UI.sur;if(!u)return;const m=mealById(u.m),t=typeById(u.t),dt=weekDates()[u.d];
   const names=SURPRISES.map(x=>x.name);
   openModal(`<div class="sur"><h2>Surprise!</h2><p>Your mystery meal is landing...</p>
-   <div class="sbox"><div id="sart">${ART[t.art]}</div><b id="sname" aria-live="polite">${reduced()?esc(m.name):'???'}</b>
+   <div class="sbox" style="--c:${t.color}"><b id="sname" aria-live="polite">${reduced()?esc(m.name):'???'}</b>
    <span class="slot sreveal ${reduced()?'':'hide'}" id="sslot">${esc(t.name)} · ${DAYS[u.d]} ${dt.getDate()}</span></div>
-   <div class="linkrow sreveal ${reduced()?'':'hide'}" id="slink"><a class="btn pri" href="${esc(m.recipe)}" target="_blank" rel="noopener noreferrer">View recipe ↗</a></div>
-   <div class="row" style="justify-content:center"><button class="btn" data-act="reroll">Reroll</button><button class="btn" data-act="closeModal">Keep it</button></div></div>`);
+   <div class="row brow"><a class="btn pri sreveal ${reduced()?'':'hide'}" id="slink" href="${esc(m.recipe)}" target="_blank" rel="noopener noreferrer">View recipe ↗</a><button class="btn" data-act="reroll">Reroll</button><button class="btn" data-act="closeModal">Keep it</button></div></div>`);
   if(reduced())return;
   let n=0;const el=$('#sname');
   const iv=setInterval(()=>{
@@ -720,17 +734,41 @@ const CRIT={
 };
 function spawnCritter(){
   if(reduced()||document.hidden||S.step!=='plan')return;
-  const L=$('.critters');if(!L||L.children.length>=3)return;
+  const L=$('.critters');if(!L||L.children.length>=4)return;
   const sc=$('.scene');const th=(sc&&sc.dataset.theme)||'meadow';
   const k=pickOne(CRIT[th]||CRIT.meadow);
   const el=document.createElement('div');el.className='crit '+k.cls+(Math.random()<.5?' rtl':'');
-  el.style.top=(4+Math.random()*88).toFixed(1)+'%';el.style.width=k.w+'px';
-  el.style.setProperty('--dur',(k.d[0]+Math.random()*(k.d[1]-k.d[0])).toFixed(1)+'s');
+  const r=sc.getBoundingClientRect();const vt=Math.max(0,-r.top),vb=Math.min(r.height,innerHeight-r.top);if(vb-vt<120)return;el.style.top=(vt+60+Math.random()*Math.max(10,vb-vt-140)).toFixed(0)+'px';el.style.width=k.w+'px';
+  el.style.setProperty('--dur',((k.d[0]+Math.random()*(k.d[1]-k.d[0]))/1.7).toFixed(1)+'s');
   el.setAttribute('aria-hidden','true');el.innerHTML='<i>'+k.svg()+'</i>';
   el.addEventListener('animationend',e=>{if(e.target===el)el.remove()});L.appendChild(el);
 }
-(function loop(){spawnCritter();setTimeout(loop,2200+Math.random()*3800)})();
+(function loop(){spawnCritter();setTimeout(loop,1200+Math.random()*2200)})();
+FABICON.wheel=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>`;
 FABICON.gift=`<svg viewBox="0 0 24 24" fill="none" stroke="#1B1B1B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19v-3.5h-19zM12 5.5V20M12 5.5C10 2 6 2.5 7 5c.4 1 3 .5 5 .5zM12 5.5c2-3.500 6-3 5-.5-.4 1-3 .5-5 .5z"/></svg>`;
+
+function wheelSvg(items){
+  const n=items.length,R=140,C=150,cols=['#FF7AC6','#FFC933','#4B5BE0','#34C77B','#FF8A4C','#8E5CF7'],tc=['#1B1B1B','#1B1B1B','#fff','#1B1B1B','#1B1B1B','#fff'];
+  if(n<2)return `<svg viewBox="0 0 300 300" role="img" aria-label="Empty wheel"><circle cx="150" cy="150" r="140" fill="#F1F1F1" stroke="#1B1B1B" stroke-width="4"/><text x="150" y="150" text-anchor="middle" dominant-baseline="middle" font-family="Oswald,sans-serif" font-size="15" fill="#6a6a6a">${n?'Add one more meal':'Add your meals'}</text></svg>`;
+  const seg=360/n,P=a=>{const r=(a-90)*Math.PI/180;return [(C+R*Math.cos(r)).toFixed(2),(C+R*Math.sin(r)).toFixed(2)]};
+  let g='';
+  items.forEach((name,i)=>{
+    const a0=i*seg,a1=(i+1)*seg,[x0,y0]=P(a0),[x1,y1]=P(a1),mid=(a0+a1)/2-90;
+    const lab=name.length>14?name.slice(0,13)+'…':name;
+    g+=`<path d="M${C} ${C}L${x0} ${y0}A${R} ${R} 0 ${seg>180?1:0} 1 ${x1} ${y1}Z" fill="${cols[i%6]}" stroke="#1B1B1B" stroke-width="2.5" stroke-linejoin="round"/><text transform="rotate(${mid.toFixed(2)} ${C} ${C})" x="${C+R-14}" y="${C}" text-anchor="end" dominant-baseline="middle" font-family="Inter,sans-serif" font-weight="700" font-size="${n<=6?14:n<=9?12:10.5}" fill="${tc[i%6]}">${esc(lab)}</text>`;
+  });
+  return `<svg viewBox="0 0 300 300" id="wheelsvg" role="img" aria-label="Wheel with ${n} meals" style="transform:rotate(${UI.wrot||0}deg)">${g}<circle cx="150" cy="150" r="140" fill="none" stroke="#1B1B1B" stroke-width="4"/><circle cx="150" cy="150" r="16" fill="#fff" stroke="#1B1B1B" stroke-width="4"/></svg>`;
+}
+function wheelBody(){
+  const w=S.wheel=S.wheel||[];
+  return `<div class="wheelwrap"><div class="wptr"></div>${wheelSvg(w)}</div>
+  <div class="wres" id="wres" aria-live="polite">${w.length>1?'Ready when you are':'Add at least 2 meals'}</div>
+  <div class="wadd"><input class="inp" id="wnm" maxlength="30" placeholder="eg. Waakye" autocomplete="off" aria-label="Meal to add to the wheel"><button class="btn pri" data-act="wheelAdd">Add</button></div>
+  <div class="wchips">${w.map((x,i)=>`<span class="chip">${esc(x)}<button class="x" data-act="wheelRm" data-i="${i}" aria-label="Remove ${esc(x)}">×</button></span>`).join('')}</div>
+  <div class="row wrow"><button class="btn" data-act="wheelMenu">Use my menu</button><button class="btn" data-act="wheelClear">Clear</button><button class="btn pri" data-act="wheelSpin" ${w.length>1?'':'disabled'}>Spin</button></div>`;
+}
+function wheelRefresh(focus){const b=$('#wbody');if(!b)return;b.innerHTML=wheelBody();if(focus){const i=$('#wnm');i&&i.focus()}}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='wnm'){e.preventDefault();A.wheelAdd()}});
 function chipHtml(t,d,seen,dk,state,i){
   const id=S.plan[t.id]&&S.plan[t.id][d];const m=id&&mealById(id);
   if(!m)return `<div class="chip2 empty ${state}" style="--i:${i}"><button class="cname" data-act="swap" data-t="${t.id}" data-d="${d}"><span class="tx"><b>+ Add ${esc(t.name.toLowerCase())}</b></span></button></div>`;
@@ -778,7 +816,7 @@ function mapHtml(ts,dates,todayIdx){
   return `<div class="scene" data-theme="${th}">
    <div class="decor" aria-hidden="true">${dec.join('')}</div>
    <div class="critters" aria-hidden="true"></div>
-   <div class="fabs"><div class="fabcol">${fab('surprise','Surprise','gift','pri')}${fab('market','Market','market')}${fab('addMealOpen','Add meal','add')}${fab('shuffle','Shuffle','dice')}${fab('badges','Badges','trophy')}${fab('theme','Theme','theme')}</div></div>
+   <div class="fabs"><div class="fabcol">${fab('surprise','Surprise','gift','pri')}${fab('wheel','Spin','wheel')}${fab('market','Market','market')}${fab('addMealOpen','Add meal','add')}${fab('shuffle','Shuffle','dice')}${fab('badges','Badges','trophy')}${fab('theme','Theme','theme')}</div></div>
    <div class="hud"><span class="pill">Lv ${lv}</span><span class="pill">Your week · ${fmtD(dates[0])} – ${fmtD(dates[6])}</span><span class="pill">${ART.flame} ${streak()}</span></div>
    <div class="mapwrap"><svg id="pathsvg" class="pathsvg" aria-hidden="true"></svg>${stops}</div>
   </div>`;
@@ -820,7 +858,7 @@ function vPlan(){
   const ts=activeTypes();const dates=weekDates();const todayIdx=(new Date().getDay()+6)%7;
   const emptyTypes=ts.filter(t=>!S.meals.some(m=>m.types.includes(t.id)));
   const plain=(S.theme||'meadow')==='plain';
-  const ptools=plain?`<button class="btn pri" data-act="surprise">Surprise me</button><button class="btn" data-act="market">Market list</button><button class="btn" data-act="addMealOpen">+ Add Meal</button><button class="btn" data-act="shuffle">Shuffle</button><button class="btn" data-act="badges">Badges</button><button class="btn" data-act="theme">Theme</button>`:'';
+  const ptools=plain?`<button class="btn pri" data-act="surprise">Surprise me</button><button class="btn" data-act="wheel">Spin the wheel</button><button class="btn" data-act="market">Market list</button><button class="btn" data-act="addMealOpen">+ Add Meal</button><button class="btn" data-act="shuffle">Shuffle</button><button class="btn" data-act="badges">Badges</button><button class="btn" data-act="theme">Theme</button>`:'';
   return `<div class="topbar">${LOGO}<div class="tools">
    ${ptools}<button class="icb" data-act="bell" aria-label="Notifications"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V7a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14a1.7 1.7 0 0 0 3 0"/></svg></button>
    <button class="me" data-act="avatarMenu" aria-haspopup="menu"><span class="av">${esc(initials())}</span>${esc(dname())}</button>
@@ -837,6 +875,7 @@ function render(){
   const spin=UI.spin;UI.spin=false;UI.reveal=false;UI.pop=null;
   if(spin&&!reduced())spinCells();
   schedulePath();
+  if(S.step==='plan')setTimeout(spawnCritter,500);
   const mw=$('.mapwrap');if(ro){ro.disconnect();ro=null}
   if(mw&&window.ResizeObserver){ro=new ResizeObserver(schedulePath);ro.observe(mw)}
 }
@@ -913,6 +952,20 @@ const A={
   closeModal();render();toast(name+' added')},
  swap(el){swapModal(el.dataset.t,+el.dataset.d)},
  setMeal(el){S.plan[el.dataset.t][+el.dataset.d]=el.dataset.m;save();closeModal();render()},
+ wheel(){UI.wrot=0;UI.spinning=false;S.wheel=S.wheel||[];openModal(`<h2>Spin the wheel</h2><p>Add what you're torn between and let the wheel pick.</p><div id="wbody">${wheelBody()}</div><div class="row"><button class="btn" data-act="closeModal">Close</button></div>`)},
+ wheelAdd(){const i=$('#wnm');if(!i)return;const v=(i.value||'').trim();if(!v){i.focus();return}const w=S.wheel=S.wheel||[];if(w.length>=12){toast('The wheel holds up to 12 meals');return}if(w.some(x=>x.toLowerCase()===v.toLowerCase())){toast('Already on the wheel');i.select();return}w.push(v);UI.wrot=0;save();wheelRefresh(true)},
+ wheelRm(el){const w=S.wheel||[];w.splice(+el.dataset.i,1);UI.wrot=0;save();wheelRefresh(false)},
+ wheelClear(){S.wheel=[];UI.wrot=0;save();wheelRefresh(true)},
+ wheelMenu(){const w=S.wheel=S.wheel||[];const have=new Set(w.map(x=>x.toLowerCase()));const pool=shuffle(S.meals.map(m=>m.name).filter(n=>!have.has(n.toLowerCase())));const room=Math.max(0,8-w.length);if(!pool.length){toast('Your menu is already on the wheel');return}pool.slice(0,room||0).forEach(n=>w.push(n));if(!room)toast('Clear the wheel first to load more');UI.wrot=0;save();wheelRefresh(false)},
+ wheelSpin(el){
+  const w=S.wheel||[];if(w.length<2||UI.spinning)return;UI.spinning=true;
+  const n=w.length,seg=360/n,i=Math.floor(Math.random()*n);
+  const cur=UI.wrot||0;const tgt=360*(Math.ceil(cur/360)+5)-(i+.5)*seg+(Math.random()-.5)*seg*.6;UI.wrot=tgt;
+  const sv=$('#wheelsvg'),res=$('#wres');if(res)res.textContent='Spinning...';
+  document.querySelectorAll('[data-act^="wheel"]').forEach(b=>b.disabled=true);
+  const fin=()=>{UI.spinning=false;const r=$('#wres');if(!r)return;r.innerHTML=`Eat <b>${esc(w[i])}</b>!<small>The wheel has spoken.</small>`;document.querySelectorAll('[data-act^="wheel"]').forEach(b=>b.disabled=false);confetti(80)};
+  if(sv){if(reduced()){sv.style.transition='none';sv.style.transform='rotate('+tgt+'deg)';fin()}else{sv.style.transform='rotate('+tgt+'deg)';setTimeout(fin,4300)}}else fin();
+ },
  surprise(el){UI.sur=null;if(!doSurprise())return;render();surpriseModal()},
  reroll(){undoSurprise();if(!doSurprise()){render();return}render();surpriseModal()},
  market(){track(()=>{S.game.market=true;save()});marketModal()},
