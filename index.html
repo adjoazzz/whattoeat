@@ -36,6 +36,7 @@ input,select{font:inherit;font-variation-settings:inherit;color:inherit}
 .center{width:100%;max-width:470px;margin:auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding-block:12px}
 .art{display:block;margin:0 auto 14px}
 .art img{display:block;max-width:100%;height:auto}
+.tart img,.gh img{display:block;width:100%;height:100%;object-fit:contain}
 .logo-img{display:block;height:auto}
 h1{font-family:var(--f-head);font-variation-settings:'SOFT' 100,'WONK' 0;font-weight:600;font-size:21px;line-height:1.25;margin:0 0 8px;text-wrap:balance}
 .sub{color:#6a6a6a;font-size:13px;margin:0 0 22px;max-width:520px;text-wrap:pretty}
@@ -167,10 +168,10 @@ const ART={
 trio:`<img src="assets/tomatoes.png" alt="" width="150" height="99">`,
 toast:`<img src="assets/toast.png" alt="" width="190" height="151">`,
 avocado:`<img src="assets/avocado.png" alt="" width="150" height="144">`,
-coffee:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="48" rx="22" ry="6" fill="#E9E9E9"/><path d="M10 26h34v10c0 8-7 13-17 13S10 44 10 36z" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><path d="M44 29h4c4 0 5 7 0 8h-4" stroke="#9a9a9a" stroke-width="2" fill="none"/><ellipse cx="27" cy="26" rx="17" ry="4.6" fill="#5A3417" stroke="#9a9a9a" stroke-width="2"/><path d="M20 18c-3-4 3-6 0-10M30 18c-3-4 3-6 0-10" stroke="#bbb" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
-salad:`<svg viewBox="0 0 60 60"><path d="M6 30h48c0 14-10 24-24 24S6 44 6 30z" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><circle cx="18" cy="26" r="9" fill="#58B947"/><circle cx="31" cy="22" r="10" fill="#3E9A3C"/><circle cx="43" cy="27" r="8" fill="#6BC653"/><circle cx="24" cy="20" r="4.5" fill="#E8472A"/><circle cx="38" cy="18" r="3.8" fill="#E8472A"/><circle cx="31" cy="29" r="3" fill="#F6D04D"/></svg>`,
-pasta:`<svg viewBox="0 0 60 60"><circle cx="30" cy="32" r="25" fill="#fff" stroke="#9a9a9a" stroke-width="2"/><circle cx="30" cy="32" r="17" fill="#F4E2C0"/><path d="M16 30c4-9 12-9 14 0s10 9 14 0M18 38c4-6 10-6 12 0s8 6 12 0" stroke="#E0502E" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="30" cy="30" r="5" fill="#C93A1F"/><path d="M34 22c3-5 8-4 9-1-3 4-6 5-9 1z" fill="#3E9A3C"/></svg>`,
-cookie:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#DCA45E" stroke="#8C5420" stroke-width="2"/><g fill="#4a2a12"><circle cx="22" cy="22" r="3.2"/><circle cx="37" cy="20" r="2.6"/><circle cx="40" cy="34" r="3.2"/><circle cx="26" cy="38" r="3"/><circle cx="17" cy="33" r="2.2"/><circle cx="32" cy="29" r="2.2"/></g></svg>`,
+coffee:`<img src="assets/coffee.png" alt="">`,
+salad:`<img src="assets/salad.png" alt="">`,
+pasta:`<img src="assets/pasta.png" alt="">`,
+cookie:`<img src="assets/cookie.png" alt="">`,
 flame:`<svg viewBox="0 0 14 16" width="11" height="12"><path d="M7 1c1 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 1 1 2 2 2-1-3 0-5 1-7z" fill="#F7931E"/><path d="M7 8c1 1.5 2.5 2 2.5 3.6a2.5 2.5 0 0 1-5 0C4.5 10 6 9.5 7 8z" fill="#FFD36B"/></svg>`,
 repeat:`<svg viewBox="0 0 14 14" width="10" height="10" fill="none" stroke="#8a8a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 6A4.5 4.5 0 0 0 3 4.5M2.5 8A4.5 4.5 0 0 0 11 9.5M3 2v3h3M11 12V9H8"/></svg>`
 };
