@@ -32,12 +32,12 @@ input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .card{background:var(--card);border-radius:20px;max-width:1180px;margin:0 auto;padding:28px 36px 40px;min-height:560px;position:relative}
 .logo{font-family:var(--f-logo);font-weight:700;color:var(--brand);font-size:24px;letter-spacing:.01em;line-height:1;display:inline-flex;align-items:flex-start;gap:3px;user-select:none}
-.logo .l2{position:relative;top:.52em}
+.logo .l2{position:relative;top:.52em;font-size:.88em}
 .logo svg{margin-top:.55em;width:9px;height:12px}
 .center{max-width:470px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:6px}
 .art{display:block;margin:0 auto 14px}
 h1{font-family:var(--f-head);font-weight:600;font-size:21px;line-height:1.25;margin:0 0 8px;text-wrap:balance}
-.sub{color:#6a6a6a;font-size:13px;margin:0 0 22px;max-width:420px;text-wrap:balance}
+.sub{color:#6a6a6a;font-size:13px;margin:0 0 22px;max-width:520px;text-wrap:pretty}
 .field{width:100%;text-align:left;margin-bottom:14px}
 .field label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
 .inp{width:100%;height:40px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0 12px;font-size:13px}
@@ -73,7 +73,7 @@ h1{font-family:var(--f-head);font-weight:600;font-size:21px;line-height:1.25;mar
 .addc b{font-size:16px;line-height:1;font-weight:500}
 /* foods */
 .wide{max-width:700px}
-.mealrow{display:flex;gap:12px;width:100%;align-items:flex-end;position:relative;text-align:left}
+.mealrow{display:flex;gap:12px;width:100%;align-items:flex-end;position:relative;z-index:10;text-align:left}
 .mealrow .grow{flex:1;min-width:0}
 .mealrow label{font-size:11.5px;font-weight:600;display:block;margin-bottom:6px}
 .mealrow .inp{background:var(--field);border-color:transparent;height:38px}
@@ -152,7 +152,7 @@ h1{font-family:var(--f-head);font-weight:600;font-size:21px;line-height:1.25;mar
   .actions{margin-top:26px}
 }
 @media (prefers-reduced-motion:no-preference){
-  .center>*{animation:rise .35s ease both}
+  .center>*{animation:rise .35s ease backwards}
   @keyframes rise{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
 }
 </style>
@@ -307,7 +307,7 @@ function vTimes(){
   <div class="center" style="max-width:800px">
    <div class="art">${ART.toast}</div>
    <h1>When do you usually eat during the day?</h1>
-   <p class="sub">Everyone eats differently — some start late, some snack at night. Choose what fits your routine.</p>
+   <p class="sub">Everyone eats differently — some start late, some snack at night.&nbsp;Choose what fits your routine.</p>
    <div class="times">${base.concat(customs).map(tcard).join('')}</div>
    <button class="addc" data-act="addCustom"><b>+</b> Add custom meal time</button>
    <div class="actions" style="max-width:420px"><button class="btn pill" data-act="backTo" data-to="signup">Cancel</button><button class="btn pri pill" data-act="timesNext" ${activeTypes().length?'':'disabled'}>Next</button></div>
@@ -325,7 +325,7 @@ function vFoods(){return `<div>${LOGO}</div>
  <div class="center wide">
   <div class="art">${ART.avocado}</div>
   <h1>What foods do you eat often (or want to add to your plan)?</h1>
-  <p class="sub">Think of the meals that make your week complete — from your go-to weekday joint to your weekend tofu. Add a few, we'll take it from there.</p>
+  <p class="sub">Think of the meals that make your week complete&nbsp;— from your go-to weekday joint to your weekend tofu. Add a few, we'll take it from there.</p>
   <div class="mealrow">
    <div class="grow"><label for="mealin">Meal</label><input class="inp" id="mealin" placeholder="eg. Fried yam + gizzard" maxlength="48" autocomplete="off"></div>
    <div style="position:relative"><button class="typebtn" id="typebtn" data-act="typeMenu" aria-haspopup="menu" aria-expanded="${UI.menu}">${typeLabel()} ▾</button><span id="menuslot">${UI.menu?menuHtml():''}</span></div>
